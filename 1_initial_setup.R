@@ -42,3 +42,20 @@ missing_summary <- cbb_players %>%
 kable(missing_summary, 
       col.names = c("Variable", "Missing Percentage"),
       caption = "Variables with Missing Values") 
+
+# summary statistics
+summary(cbb_players$pick)
+
+# summary with skimr
+skim(cbb_players$pick)
+
+# histogram
+ggplot(cbb_players, aes(x = pick)) +
+  geom_density(fill = "skyblue", color = "black") +
+  labs(title = "Distribution of Pick Variable",
+       x = "Pick",
+       y = "Frequency") +
+  theme_minimal()
+
+# missingness
+sum(is.na(cbb_players$pick))
