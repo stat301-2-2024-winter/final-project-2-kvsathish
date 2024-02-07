@@ -5,6 +5,8 @@ library(tidyverse)
 library(skimr)
 library(ggplot2)
 library(here)
+library(naniar)
+library(knitr)
 
 ## reading in data ----
 
@@ -12,4 +14,31 @@ cbb_players <- read_csv("data/CollegeBasketballPlayers2009-2021.csv")
 
 View(cbb_players)
 
+# summary statistics
+summary(cbb_players)
 
+# check for missing values
+missing_values <- colSums(is.na(cbb_players))
+print(missing_values)
+
+# count the number of categorical and numerical variables
+num_vars <- sapply(cbb_players, is.numeric)
+cat_vars <- sapply(cbb_players, is.factor)
+
+# display the results
+cat("Number of variables:", ncol(cbb_players), "\n")
+cat("Number of observations:", nrow(cbb_players), "\n")
+cat("Number of numerical variables:", sum(num_vars), "\n")
+cat("Number of categorical variables:", sum(cat_vars), "\n")
+
+
+
+# display missingness
+missing_summary <- cbb_players %>%
+  summarise_all(~mean(is.na(.)) * 100) %>%
+  gather(variable, missing_percentage) |> 
+  filter(missing_percentage > 0)
+
+kable(missing_summary, 
+      col.names = c("Variable", "Missing Percentage"),
+      caption = "Variables with Missing Values") 

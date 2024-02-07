@@ -3586,6 +3586,165 @@ Github Repo Link
 
 </div>
 </div>
+<p>Above, it is possible to visualize the first five observations of the <code>cbb_players</code> dataset in a formatted table.</p>
+<p>In the dataset above, there are 66 total variables and 61,061 total observations. Moreover, there are 7 categorical variables as well as 59 numerical variables. In terms of missingness, there are missing values present in 35 of the variables. A formatted table below reveals the <code>missing_percentage</code> or the percentage of values that missing in each column. I plan to account for these <code>NA</code> values on top of the missing values in <code>pick</code> during my analysis of the dataset to make predictive models.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<caption>Variables with Missing Values</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Variable</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Missing Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">pick</td>
+<td style="text-align: right;">97.6498911</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rec Rank</td>
+<td style="text-align: right;">69.7515599</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">dunksmade/(dunksmade+dunksmiss)</td>
+<td style="text-align: right;">54.8795467</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">midmade/(midmade+midmiss)</td>
+<td style="text-align: right;">17.0075826</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rimmade/(rimmade+rimmiss)</td>
+<td style="text-align: right;">16.5572133</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rimmade</td>
+<td style="text-align: right;">10.3650448</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rimmade+rimmiss</td>
+<td style="text-align: right;">10.3650448</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">midmade</td>
+<td style="text-align: right;">10.3650448</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">midmade+midmiss</td>
+<td style="text-align: right;">10.3650448</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dunksmade</td>
+<td style="text-align: right;">10.3650448</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">dunksmiss+dunksmade</td>
+<td style="text-align: right;">10.3650448</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">num</td>
+<td style="text-align: right;">7.8446144</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ast/tov</td>
+<td style="text-align: right;">7.7414389</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">...65</td>
+<td style="text-align: right;">7.6710175</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ht</td>
+<td style="text-align: right;">0.1408428</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">drtg</td>
+<td style="text-align: right;">0.0736968</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">adrtg</td>
+<td style="text-align: right;">0.0736968</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dporpag</td>
+<td style="text-align: right;">0.0736968</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">stops</td>
+<td style="text-align: right;">0.0736968</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bpm</td>
+<td style="text-align: right;">0.0736968</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">obpm</td>
+<td style="text-align: right;">0.0736968</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dbpm</td>
+<td style="text-align: right;">0.0736968</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gbpm</td>
+<td style="text-align: right;">0.0736968</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ogbpm</td>
+<td style="text-align: right;">0.0736968</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">dgbpm</td>
+<td style="text-align: right;">0.0736968</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">...66</td>
+<td style="text-align: right;">0.0736968</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">yr</td>
+<td style="text-align: right;">0.0655083</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mp</td>
+<td style="text-align: right;">0.0622328</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">oreb</td>
+<td style="text-align: right;">0.0622328</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">dreb</td>
+<td style="text-align: right;">0.0622328</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">treb</td>
+<td style="text-align: right;">0.0622328</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ast</td>
+<td style="text-align: right;">0.0622328</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">stl</td>
+<td style="text-align: right;">0.0622328</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">blk</td>
+<td style="text-align: right;">0.0622328</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pts</td>
+<td style="text-align: right;">0.0622328</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
 </section>
 </section>
 <section id="target-variable-analysis" class="level2">
@@ -3598,10 +3757,10 @@ Github Repo Link
 </section>
 <section id="timeline" class="level4">
 <h4 class="anchored" data-anchor-id="timeline">Timeline:</h4>
-<p>Week 1 - Figure out how to attack the central question (Which player is the greatest of all time?).</p>
-<p>Week 2 - Plan out the EDA, tidy the data, and begin creating graphics to serve as evidence in answering the central question.</p>
-<p>Week 3 - Finish building all the necessary graphics needed for proper analysis of the data. Decide whether advanced stats should be incorporated in the final EDA.</p>
-<p>Week 4 - Write up all the analysis and make sure to weigh the context behind all the final statistics for effective conclusions.</p>
+<p>Week 1 - Figure out how to attack the prediction problem (Which players get drafted to the NBA?).</p>
+<p>Week 2 - Plan out the predictive modelling, tidy the data, and begin creating graphics to serve as evidence in addressing the problem.</p>
+<p>Week 3 - Finish building all the necessary graphics needed for proper analysis of the data. Decide whether additional datasets should be used</p>
+<p>Week 4 - Write up all the analysis and make sure to weigh the context behind all the predictive modelling for effective conclusions.</p>
 </section>
 </section>
 

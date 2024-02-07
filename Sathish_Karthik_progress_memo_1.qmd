@@ -54,6 +54,8 @@ library(skimr)
 library(ggplot2)
 library(here)
 library(kableExtra)
+library(knitr)
+library(naniar)
 ```
 
 
@@ -67,8 +69,28 @@ cbb_players <- read_csv("data/CollegeBasketballPlayers2009-2021.csv")
 kable(head(cbb_players))
 ```
 
+Above, it is possible to visualize the first five observations of the `cbb_players` dataset in a formatted table.
+
+In the dataset above, there are 66 total variables and 61,061 total observations. Moreover, there are 7 categorical variables as well as 59 numerical variables. In terms of missingness, there are missing values present in 35 of the variables. A formatted table below reveals the `missing_percentage` or the percentage of values that missing in each column. I plan to account for these `NA` values on top of the missing values in `pick` during my analysis of the dataset to make predictive models.
+
+
+```{r}
+# display missingness
+missing_summary <- cbb_players |> 
+  summarise_all(~mean(is.na(.)) * 100) |> 
+  gather(variable, missing_percentage) |> 
+  filter(missing_percentage > 0) |> 
+  arrange(desc(missing_percentage))
+
+kable(missing_summary, 
+      col.names = c("Variable", "Missing Percentage"),
+      caption = "Variables with Missing Values")
+```
+
 
 ## Target Variable Analysis
+
+
 
 ## Misc
 
@@ -76,12 +98,12 @@ kable(head(cbb_players))
 
 #### Timeline:
 
-Week 1 - Figure out how to attack the central question (Which player is the greatest of all time?).
+Week 1 - Figure out how to attack the prediction problem (Which players get drafted to the NBA?).
 
-Week 2 - Plan out the EDA, tidy the data, and begin creating graphics to serve as evidence in answering the central question.
+Week 2 - Plan out the predictive modelling, tidy the data, and begin creating graphics to serve as evidence in addressing the problem.
 
-Week 3 - Finish building all the necessary graphics needed for proper analysis of the data. Decide whether advanced stats should be incorporated in the final EDA.
+Week 3 - Finish building all the necessary graphics needed for proper analysis of the data. Decide whether additional datasets should be used
 
-Week 4 - Write up all the analysis and make sure to weigh the context behind all the final statistics for effective conclusions.
+Week 4 - Write up all the analysis and make sure to weigh the context behind all the predictive modelling for effective conclusions.
 
 
