@@ -18,4 +18,70 @@ execute:
 from: markdown+emoji 
 ---
 
+::: {.callout-tip icon=false}
+
+## Github Repo Link
+
+
+[My Github Repo Link](https://github.com/stat301-2-2024-winter/final-project-2-kvsathish.git)
+
+:::
+
+## Prediction Problem
+
+  As an avid basketball fan, I wanted to look into what qualifies college basketball players to be drafted into the National Basketball Association (NBA). Specifically, I am interested to see if it is possible to predict which players from college would get drafted into the NBA, based on a range of statistics collected across all seasons played at the collegiate level. Furthermore, it would be also very interesting to distinguish between players drafted as a lottery pick in the first round (first fourteen picks), a latter pick in the rest of the first round, or a pick in the second round of the NBA draft. 
+
+  For this proposed analysis, the `pick` variable is chosen as the target variable within the `cbb_players` dataset. This values for this variable indicate what number pick in the NBA draft each of the players achieved. Although this variable is a numerical variable, the type of prediction problem that I've described is a complex classification problem. The `pick` variable is the variable of interest and it will be utilized to organize college basketball players in the following categories: "Not drafted", "Lottery Pick", "Later First Round", or "Second Round". Essentially, this is a categorical outcome and all of the players in the dataset will be assigned to one of these four categories. Since there are separate classes for identification and prediction, this is a classification problem. With four possible outcomes, it is a multi-class classification problem.
+
+  The resulting prediction model might not change the world, but it piques my interest. Basketball has always been my favorite sport to watch, and it is so exciting that I am able to conduct a thorough analysis combining basketball at the collegiate and pro level. I've always thought about why some of the greatest college basketball players do not pan out in the NBA, and I feel as though this statistical analysis may reveal which factors are most important for an appropriate transition to the pro level. A prediction model would be useful to identify which prospective players may translate best into the NBA. This model could also help future players mold their game toward a more specific prototype to achieve more success in the sport. Again, I think it would be very interesting to also possibly see how the prototype of NBA draftees had changed over time. All in all, I believe this would be an extremely fun project.
+
+
+## Data Source
+
+The source of my data is a user on `Kaggle.com`, named Aditya Kumar. They are a computer science major at the University of Southern California with roots in Los Angeles, California. The data card is named `College Basketball 2009-2021 + NBA Advanced Stats`^[Found on [https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data](https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data)]. Although all the stats were compiled by Aditya, the raw statistical data should be credited to Bart Torvik^[Found on [https://barttorvik.com/](https://barttorvik.com/)].
+
+As of right now, I plan on utilizing a singular dataset called `CollegeBasketballPlayers2009-2021.csv` to compare over 4500 college basketball players from 2009 to 2021. However, if I feel as though there is not enough observations or predictors, or if I may require some validative measures, I may dive into the `CollegeBasketballPlayers2022.csv`, `latest_RAPTOR_by_player.csv`, `modern_RAPTOR_by_player.csv` to combine information and analyze the data more holistically. If I need to join these datasets together, I plan on aligning variables based on similarity and function. I think I will be able to combine the data seamlessly if need be.
+
+
+## Data Quality Check
+
+```{r}
+#| echo: false
+
+# load packages
+library(tidyverse)
+library(skimr)
+library(ggplot2)
+library(here)
+library(kableExtra)
+```
+
+
+#### Reading in dataset
+
+```{r}
+#| echo: true
+# read in dataset
+cbb_players <- read_csv("data/CollegeBasketballPlayers2009-2021.csv")
+
+kable(head(cbb_players))
+```
+
+
+## Target Variable Analysis
+
+## Misc
+
+#### Goal: Finish the project by Wednesday, November 29th.
+
+#### Timeline:
+
+Week 1 - Figure out how to attack the central question (Which player is the greatest of all time?).
+
+Week 2 - Plan out the EDA, tidy the data, and begin creating graphics to serve as evidence in answering the central question.
+
+Week 3 - Finish building all the necessary graphics needed for proper analysis of the data. Decide whether advanced stats should be incorporated in the final EDA.
+
+Week 4 - Write up all the analysis and make sure to weigh the context behind all the final statistics for effective conclusions.
+
 
