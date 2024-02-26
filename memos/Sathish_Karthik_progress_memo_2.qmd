@@ -36,22 +36,53 @@ GitHub (free account) cannot store large files. If you try to commit and push a 
 **We may need to do that for files in your final project!**
 :::
 
-## Data source
+```{r}
+#| echo: false
+
+# load packages
+library(tidyverse)
+library(skimr)
+library(ggplot2)
+library(here)
+library(kableExtra)
+library(knitr)
+library(naniar)
+
+load("memo_data/bball_players.rda")
+```
+
+
+
+## New Analysis of Target Variable
+
+```{r}
+#| echo: false
+
+bball_players |> 
+  ggplot(aes(x = pick)) +
+  geom_bar() +
+  labs(title = "Distribution of `pick`",
+       y = NULL) +
+  theme_minimal()
+```
+
+
+## Assessment Metric
 
 Blah blah blah^[an example of footnote --- [content in margins](https://quarto.org/docs/blog/posts/2022-02-17-advanced-layout/)]
 
-## Why this data
+## Analysis Plan
 
 Blah blah blah^[another footnote]
 
-## Data quality & complexity check
+## Modelling
 
 Blah blah blah
 
-## Potential data issues
+## Metric Evaluation of Models
 
 Blah blah blah
 
-## Misc
+## Progress
 
 Blah Blah

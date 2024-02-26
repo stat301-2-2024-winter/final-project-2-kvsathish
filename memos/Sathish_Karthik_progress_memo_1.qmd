@@ -64,7 +64,7 @@ library(naniar)
 ```{r}
 #| echo: true
 # read in dataset
-cbb_players <- read_csv("data/CollegeBasketballPlayers2009-2021.csv")
+cbb_players <- read_csv("memo_data/CollegeBasketballPlayers2009-2021.csv")
 
 kable(head(cbb_players))
 ```
@@ -109,7 +109,7 @@ According to the density plot and summary statistics above, there is a central t
 
 ## Misc
 
-#### Goal: Finish the project by Wednesday, November 29th.
+#### Goal: Finish the project by 3/13.
 
 #### Timeline:
 
