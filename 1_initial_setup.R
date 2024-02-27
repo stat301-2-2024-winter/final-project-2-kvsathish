@@ -7,6 +7,7 @@ library(ggplot2)
 library(here)
 library(naniar)
 library(knitr)
+library(rsample)
 set.seed(423)
 
 ## OLD ----
@@ -63,6 +64,7 @@ set.seed(423)
 #sum(is.na(cbb_players$pick))
 
 
+## NEW ----
 ## new read in of data ----
 
 bball_players <- read_csv("data/CollegeBasketballPlayers2009-2021.csv") |> 
@@ -84,4 +86,50 @@ bball_players |>
   labs(title = "Distribution of `pick`",
        y = NULL) +
   theme_minimal()
+
+
+# see how many drafted vs undrafted
+bball_players |> 
+  summarize(
+    .by = pick,
+    count = n()
+  )
+
+# split data
+bball_split <- bball_players |>
+  initial_split(prop = 0.8, strata = pick)
+
+
+bball_train <- training(bball_split)
+bball_test <- testing(bball_split)
+
+save(bball_split, file = here("results/house_split.rda"))
+save(bball_train, file = here("results/house_train.rda"))
+save(bball_test, file = here("results/house_test.rda"))
+
+
+# view dimensions of training and testing sets
+train_dims <- dim(bball_train)
+test_dims <- dim(bball_test)
+
+dims_tibble <- tibble(
+  Dataset = c("Training", "Testing"),
+  Rows = c(train_dims[1], test_dims[1]),
+  Columns = c(train_dims[2], test_dims[2])
+)
+
+dims_tibble |> 
+  kable(align = "c", caption = "Dimensions of the datasets in `bball_split`")
+
+# skim vars for training data
+skimr::skim_without_charts(bball_train)
+
+
+# folds
+bball_folds <- 
+  vfold_cv(bball_train, v = 10, repeats = 5, strata = pick)
+
+
+save(bball_folds, file = here("results/bball_folds.rda"))
+
 
