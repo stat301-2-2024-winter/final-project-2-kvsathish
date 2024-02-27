@@ -8,7 +8,11 @@ library(here)
 library(naniar)
 library(knitr)
 library(rsample)
+library(tidymodels)
 set.seed(423)
+
+# handle common conflicts
+tidymodels_prefer()
 
 ## OLD ----
 ## reading in data ----
@@ -69,7 +73,9 @@ set.seed(423)
 
 bball_players <- read_csv("data/CollegeBasketballPlayers2009-2021.csv") |> 
   janitor::clean_names() |> 
-  mutate(pick = ifelse(!is.na(pick) & pick <= 60, "Yes", "No"))
+  mutate(pick = ifelse(!is.na(pick) & pick <= 60, "Yes", "No"),
+         rec_rank = ifelse(!is.na(rec_rank) & rec_rank <= 100, "Yes", "No")
+         )
 
 
 View(bball_players)
@@ -94,6 +100,9 @@ bball_players |>
     .by = pick,
     count = n()
   )
+
+# downsampling
+# initial_split()
 
 # split data
 bball_split <- bball_players |>

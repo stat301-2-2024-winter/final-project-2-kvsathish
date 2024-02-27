@@ -69,11 +69,7 @@ bball_players |>
 
 ## Assessment Metric
 
-????
-
-do u change character to factor vars?
-
-ask about gitignore?
+Assessment Metric is RUC
 
 Blah blah blah^[an example of footnote --- [content in margins](https://quarto.org/docs/blog/posts/2022-02-17-advanced-layout/)]
 
