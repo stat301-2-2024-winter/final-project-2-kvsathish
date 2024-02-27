@@ -13,9 +13,9 @@ set.seed(423)
 
 load("data/bball_players.rda")
 
-load("results/house_split.rda")
-load("results/house_train.rda")
-load("results/house_test.rda")
+load("results/bball_split.rda")
+load("results/bball_train.rda")
+load("results/bball_test.rda")
 load("results/bball_folds.rda")
 
 # handle common conflicts

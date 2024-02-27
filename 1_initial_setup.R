@@ -112,9 +112,9 @@ bball_split <- bball_players |>
 bball_train <- training(bball_split)
 bball_test <- testing(bball_split)
 
-save(bball_split, file = here("results/house_split.rda"))
-save(bball_train, file = here("results/house_train.rda"))
-save(bball_test, file = here("results/house_test.rda"))
+save(bball_split, file = here("results/bball_split.rda"))
+save(bball_train, file = here("results/bball_train.rda"))
+save(bball_test, file = here("results/bball_test.rda"))
 
 
 # view dimensions of training and testing sets

@@ -69,7 +69,7 @@ bball_players |>
 
 ## Assessment Metric
 
-Assessment Metric is RUC
+I plan to use the **accuracy** metric to assess the performance of the two models below.
 
 Blah blah blah^[an example of footnote --- [content in margins](https://quarto.org/docs/blog/posts/2022-02-17-advanced-layout/)]
 
@@ -87,4 +87,5 @@ Blah blah blah
 
 ## Progress
 
-Blah Blah
+Questions:
+- is my fitted model for logreg right?
