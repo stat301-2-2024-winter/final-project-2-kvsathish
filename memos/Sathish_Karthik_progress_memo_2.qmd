@@ -30,35 +30,48 @@ citation-location: margin
 
 :::
 
-::: {.callout-warning}
-GitHub (free account) cannot store large files. If you try to commit and push a large dataset you will have an ERROR! Any file over 100 MB (100,000 KB) needs to be added to the `.gitignore` file BEFORE committing.
 
-**We may need to do that for files in your final project!**
-:::
 
 ```{r}
 #| echo: false
 
-# load packages
+# packages and datasets
+
 library(tidyverse)
 library(skimr)
 library(ggplot2)
 library(here)
-library(kableExtra)
-library(knitr)
 library(naniar)
+library(knitr)
+library(rsample)
+library(tidymodels)
+library(doParallel)
+set.seed(4231)
 
 load(here("data/bball_players.rda"))
+
+load(here("results/bball_split.rda"))
+load(here("results/bball_train.rda"))
+load(here("results/bball_test.rda"))
+load(here("results/bball_folds.rda"))
+load(here("results/basic_rec.rda"))
+
+load(here("results/null_fit.rda"))
+load(here("results/logreg_fit.rda"))
 ```
+
+
 
 
 
 ## New Analysis of Target Variable
 
 ```{r}
+#| label: fig-1
+#| fig-cap: X
 #| echo: false
 
-bball_players |> 
+bball_train |> 
   ggplot(aes(x = pick)) +
   geom_bar() +
   labs(title = "Distribution of `pick`",
@@ -66,26 +79,72 @@ bball_players |>
   theme_minimal()
 ```
 
+@fig-1 shows
+
+
+
+### Data Recap
+
+The source of my data is a user on `Kaggle.com`, named Aditya Kumar. They are a computer science major at the University of Southern California with roots in Los Angeles, California. The data card is named `College Basketball 2009-2021 + NBA Advanced Stats`^[Found on [https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data](https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data)]. Although all the stats were compiled by Aditya, the raw statistical data should be credited to Bart Torvik^[Found on [https://barttorvik.com/](https://barttorvik.com/)].
+
+As for the current analysis, I am utilizing a singular dataset called `CollegeBasketballPlayers2009-2021.csv` to compare over 4500 college basketball players from 2009 to 2021. However, I may also utilize the `CollegeBasketballPlayers2022.csv` if I feel as though more drafted individuals are needed for analysis. If I need to join these datasets together, I plan on seamlessly aligning variables based on similarity and function.
+
 
 ## Assessment Metric
 
 I plan to use the **accuracy** metric to assess the performance of the two models below.
 
-Blah blah blah^[an example of footnote --- [content in margins](https://quarto.org/docs/blog/posts/2022-02-17-advanced-layout/)]
 
-## Analysis Plan
+## Plan for Analysis
 
-Blah blah blah^[another footnote]
 
-## Modelling
+#### Initial Splitting and Folds
 
-Blah blah blah
+Since the `bball_players` dataset has approximately 60,000 observations and only about 1,500 "yes" values for the `pick` variable (indicating a player was drafted), I first decided to down sample the data with a proportion of 0.05. Following this, I made an initial split with a proportion of 0.8 to gather appropriate training and testing data for analysis. Also, I stratified the data by the `pick` variable to try and balance the players that were drafted vs undrafted. It also makes sure all the predictor variables are represented fairly.
+
+
+```{r}
+#| label: tbl-1
+#| tbl-cap: Dimensions of the training and testing data within `bball_split`
+#| echo: false
+
+# dimensions of the datasets 
+train_dims <- dim(bball_train)
+test_dims <- dim(bball_test)
+
+dims_tibble <- tibble(
+  Dataset = c("Training", "Testing"),
+  Rows = c(train_dims[1], test_dims[1]),
+  Columns = c(train_dims[2], test_dims[2])
+)
+
+dims_tibble |> 
+  kable(align = "c", caption = "Dimensions of the datasets in `bball_split`")
+
+```
+
+@tbl-1 above reveals the corresponding dimensions for the training and testing data after all the necessary splitting has occurred.
+
+After the data was split, I made sure to conduct resampling by utilizing cross-validation. In total, there were 50 folds that were created using the `vfold_cv()` function and stratifying by the `pick` variable.
+
+#### Models and Recipes
+
+The model types that I am planning to utilize include a null (baseline), logistic regression, random forest, custom tuned random forest, custom tuned boosted trees, custom tuned k-nearest neighbors, ridge, and lasso models. In total, I plan to create nine models.
+
+In terms of recipes for the nine models above, I plan to make [X] recipes
+
+
+which model types, how many recipes etc. Note that students should have this mapped out in their GitHub repo. That is, there should be place holder R scripts created. You don't have to have everything coded, but the overall structure should be evident.   
+
+## Completed Models
+
+have two model types defined and fitted to the resamples: null/baseline model and one other model type (likely standard linear or logistic model):
+The recipe can be very basic since we just want to see if you can get things running
 
 ## Metric Evaluation of Models
 
-Blah blah blah
+demonstrate their fits are successful by displaying a table that contains each model's assessment metric value.
 
 ## Progress
 
-Questions:
-- is my fitted model for logreg right?
+summarize their progress, where they are at, and what their next steps will be. Identifying and potential issues or concerns would be a good idea too.
