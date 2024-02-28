@@ -10,7 +10,7 @@ library(knitr)
 library(rsample)
 library(tidymodels)
 library(doParallel)
-set.seed(423)
+set.seed(4231)
 
 load("data/bball_players.rda")
 
@@ -21,6 +21,7 @@ load("results/bball_folds.rda")
 load("results/basic_rec.rda")
 
 load("results/null_fit.rda")
+load("results/logreg_fit.rda")
 
 # handle common conflicts
 tidymodels_prefer()
@@ -29,6 +30,50 @@ tidymodels_prefer()
 num_cores <- parallel::detectCores(logical=TRUE)
 registerDoParallel(cores=num_cores)
 
+
+# collect accuracy metric
+null_accuracy <- null_fit |> 
+  collect_metrics() |> 
+  filter(.metric == "accuracy")
+
+logreg_accuracy <- logreg_fit |> 
+  collect_metrics() |> 
+  filter(.metric == "accuracy")
+
+# format into a table
+accuracy_table <- bind_rows(
+  mutate(null_accuracy, model = "Null Model"),
+  mutate(logreg_accuracy, model = "Logistic Regression")
+) |> 
+  select(model, everything())
+
+kable(accuracy_table, caption = "Accuracy Metrics")
+
+
+## OLD ----
+
+# Calculate assessment metric for baseline model
+baseline_results <- summary(null_fit)[[accuracy()]]
+
+# Calculate assessment metric for logistic model
+logistic_results <- summary(logreg_fit)[[accuracy()]]
+
+# Display assessment results table
+assessment_table <- data.frame(
+  Model = c("Baseline", "Logistic"),
+  Assessment_Metric = c(baseline_results, logistic_results)
+)
+kable(assessment_table)
+
+# predict class probabilities
+logreg_probs <- bball_test |> 
+  bind_cols(predict(logreg_fit, bball_test, type = "prob")) |> 
+  select(pick, .pred_Yes, .pred_No)
+
+logreg_probs |> 
+  head(5) |> 
+  kable(align = "c", caption = "Sample of five observations in Basketball data with 
+        class probabilities for `pick` from logreg model")
 
 # log regression 
 logreg_pred <- bball_test |> 

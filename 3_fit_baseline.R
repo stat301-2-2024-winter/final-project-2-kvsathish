@@ -41,7 +41,7 @@ null_workflow <- workflow() |>
 null_fit <- null_workflow |> 
   fit_resamples(
     resamples = bball_folds, 
-    control = control_resamples(save_workflow = TRUE)
+    control = control_resamples(save_pred = TRUE, save_workflow = TRUE)
   )
 
 # save fit

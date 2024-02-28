@@ -102,10 +102,13 @@ bball_players |>
   )
 
 # downsampling
-# initial_split()
+down_split <- bball_players |> 
+  initial_split(prop = 0.05, strata = pick)
+
+down_train <- training(down_split)
 
 # split data
-bball_split <- bball_players |>
+bball_split <- down_train |>
   initial_split(prop = 0.8, strata = pick)
 
 
@@ -116,6 +119,13 @@ save(bball_split, file = here("results/bball_split.rda"))
 save(bball_train, file = here("results/bball_train.rda"))
 save(bball_test, file = here("results/bball_test.rda"))
 
+# visualize target variable pick again after manipulation
+bball_train |> 
+  ggplot(aes(x = pick)) +
+  geom_bar() +
+  labs(title = "Distribution of `pick`",
+       y = NULL) +
+  theme_minimal()
 
 # view dimensions of training and testing sets
 train_dims <- dim(bball_train)

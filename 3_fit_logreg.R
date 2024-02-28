@@ -42,7 +42,7 @@ logreg_wflow <- workflow() |>
 logreg_fit <- logreg_wflow |> 
   fit_resamples(
     resamples = bball_folds,
-    control = control_resamples(save_workflow = TRUE)
+    control = control_resamples(save_pred = TRUE, save_workflow = TRUE)
   )
 
 

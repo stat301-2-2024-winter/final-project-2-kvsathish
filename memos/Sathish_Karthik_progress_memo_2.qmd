@@ -48,7 +48,7 @@ library(kableExtra)
 library(knitr)
 library(naniar)
 
-load("memo_data/bball_players.rda")
+load(here("data/bball_players.rda"))
 ```
 
 
