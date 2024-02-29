@@ -92,7 +92,7 @@ As for the current analysis, I am utilizing a singular dataset called `CollegeBa
 
 ## Assessment Metric
 
-I plan to use the **accuracy** metric to assess the performance of the two models below.
+I plan to use the **accuracy** metric to assess the performance of the two completed models below.
 
 
 ## Plan for Analysis
@@ -136,8 +136,7 @@ In terms of recipes for the six models above, I plan to make at least four recip
 
 ## Completed Models
 
-have two model types defined and fitted to the resamples: null/baseline model and one other model type (likely standard linear or logistic model):
-The recipe can be very basic since we just want to see if you can get things running
+Currently, I have completed two separate models and fitted them to the resamples. One of the models is a null (baseline) model for my classification problem. The other model is a logistic regression model. For both models, a very basic kitchen sink recipe was utilized for the fitting.
 
 ## Metric Evaluation of Models
 
@@ -165,9 +164,17 @@ accuracy_table <- bind_rows(
 kable(accuracy_table, caption = "Accuracy Metrics")
 ```
 
-demonstrate their fits are successful by displaying a table that contains each model's assessment metric value.
+@tbl-2 above successfully displays my chosen assessment metric (accuracy) and the corresponding accuracy values for two types of models. The models analyzed include the finished model fits: Null Model and Logistic Regression. Across all folds, the null model reflected an accuracy of its predictions as approximately 98.0% on average, which is extraordinarily high. This could be due to a very non-uniform distribution of `pick`, resulting in the model defaulting to "no" as a prediction. My plan to account for this can be found in the **Progress* section. For the Logistic Regression model across all folds, the accuracy of its predictions is found to be approximately 87.5% on average, which is also high. Both means found in the table are justified by the extremely low standard errors (less than 0.0051 for both).
+
 
 ## Progress
 
-summarize their progress, where they are at, and what their next steps will be. Identifying and potential issues or concerns would be a good idea too.
+#### Summary
+
+In terms of this second memo, I feel as though I have made significant progress for the final project. Prior to completing the two fitted models above, I created a simple recipe that is based on the kitchen sink approach. First, I used the `step_rm` function to remove all the variables that are not related to the target variable in any way. Then, I used the `step_dummy` function to create dummy variables that account for all the categorical variables acting as predictors. After that, I used `step_zv` to remove variables that had no variability across values and used `step_impute_mean` to impute any missing values with the mean of all other values for each of the numerical variables acting as predictors. Finally, I standardized all the predictor variables with the `step_normalize` function. This basic recipe served as an important tool to examine the fitted baseline model as well as the fitted logistic model. On top of this, I have also planned out what other models I plan to use and what recipes will correspond well with each of the models. Next steps include appropriately tuning each of the new models and reflecting as assessment metric for all the models to evaluate which model is the best at predicting which college basketball players will be drafted to the NBA.
+
+
+#### Issues (Addressing Big Data Concern)
+
+The biggest concern with my work done so far is that the distribution of the `pick` variable for my data analysis is not uniform. In fact, it is very lobsided where there are many more college basketball players that are undrafted compared to drafted. This leads to the major problem seen with computing the assessment metric above for the completed models. To address this issue, I plan to create a new dataset. First, I will create a `pick_dataset` that includes only the players that got drafted ("yes" value in the `pick` column). Then, I will create a `non_pick_dataset` that includes only undrafted players, and I'll make sure to stratify the new dataset by `year` to fairly collect players from 2009-2021. With the `non_pick_dataset`, I will then down sample it to approximately match the number of observations in the `pick_dataset`. Finally, I will utilize the `bind_rows()` function to combine both datasets into one complete dataset for analysis. Once this new suitable dataset for predictive modelling is created, I will repeat the same fitting or tuning process for each of the chosen models. The only thing to keep in mind is that the Null Model will be useless. It will reflect a value near 0.5 because there are approximately the same number of undrafted and drafted players. The balanced data renders the null model as useless because null models only make predictions off the majority class. This will be kept in mind as I choose a new baseline model prior to thorough analysis. Outside of this major issue, I am not concerned with much else. If more observations are needed, I will also incorporate players from the 2022 dataset. All in all, I feel confident moving forward with the final project.
 
