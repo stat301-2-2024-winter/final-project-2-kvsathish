@@ -68,7 +68,7 @@ load(here("results/logreg_fit.rda"))
 
 ```{r}
 #| label: fig-1
-#| fig-cap: X
+#| fig-cap: Distribution of the target variable in the `bball_players` dataset
 #| echo: false
 
 bball_train |> 
@@ -79,7 +79,7 @@ bball_train |>
   theme_minimal()
 ```
 
-@fig-1 shows
+@fig-1 shows a pretty lobsided bar chart for the variable `pick`. This is because there are much more players that went undrafted ("No") than players that were picked in the draft ("Yes"). I plan to address this issue by manipulating the data in a different way. More about this problem and how I'll address it can be found in the **Progress** section.
 
 
 
@@ -125,16 +125,14 @@ dims_tibble |>
 
 @tbl-1 above reveals the corresponding dimensions for the training and testing data after all the necessary splitting has occurred.
 
-After the data was split, I made sure to conduct resampling by utilizing cross-validation. In total, there were 50 folds that were created using the `vfold_cv()` function and stratifying by the `pick` variable.
+After the data was split, I made sure to conduct resampling by utilizing cross-validation. In total, there were 50 folds (10 folds repeated 5 times) that were created using the `vfold_cv()` function and stratifying by the `pick` variable.
 
 #### Models and Recipes
 
-The model types that I am planning to utilize include a null (baseline), logistic regression, random forest, custom tuned random forest, custom tuned boosted trees, custom tuned k-nearest neighbors, ridge, and lasso models. In total, I plan to create nine models.
+The model types that I am planning to utilize include a null (baseline), logistic regression, tuned random forest, tuned boosted trees, tuned k-nearest neighbors, and naive bayes models. In total, I plan to create six models.
 
-In terms of recipes for the nine models above, I plan to make [X] recipes
+In terms of recipes for the six models above, I plan to make at least four recipes. Two distinct recipes will be made; one that is linear-based (for the null and logistic regression models) and one that is trees-based (for the random forest, boosted trees, and k-nearest neighbors models). As for the two distinct recipes above, variations of the recipes will be created to account for the interactions between certain variables. Also, another distinct recipe will be made for the naive bayes model that excludes the `step_dummy` function.
 
-
-which model types, how many recipes etc. Note that students should have this mapped out in their GitHub repo. That is, there should be place holder R scripts created. You don't have to have everything coded, but the overall structure should be evident.   
 
 ## Completed Models
 
@@ -143,8 +141,33 @@ The recipe can be very basic since we just want to see if you can get things run
 
 ## Metric Evaluation of Models
 
+```{r}
+#| label: tbl-2
+#| tbl-cap: Accuracy metric for the Null and Logistic Regression Model
+#| echo: false
+
+# collect accuracy metric
+null_accuracy <- null_fit |> 
+  collect_metrics() |> 
+  filter(.metric == "accuracy")
+
+logreg_accuracy <- logreg_fit |> 
+  collect_metrics() |> 
+  filter(.metric == "accuracy")
+
+# format into a table
+accuracy_table <- bind_rows(
+  mutate(null_accuracy, model = "Null Model"),
+  mutate(logreg_accuracy, model = "Logistic Regression")
+) |> 
+  select(model, everything())
+
+kable(accuracy_table, caption = "Accuracy Metrics")
+```
+
 demonstrate their fits are successful by displaying a table that contains each model's assessment metric value.
 
 ## Progress
 
 summarize their progress, where they are at, and what their next steps will be. Identifying and potential issues or concerns would be a good idea too.
+

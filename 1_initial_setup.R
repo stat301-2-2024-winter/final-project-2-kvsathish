@@ -3,11 +3,9 @@
 ## packages and datasets
 library(tidyverse)
 library(skimr)
-library(ggplot2)
 library(here)
 library(naniar)
 library(knitr)
-library(rsample)
 library(tidymodels)
 set.seed(423)
 
@@ -107,6 +105,10 @@ down_split <- bball_players |>
 
 down_train <- training(down_split)
 
+# first filter for yes in pick, then store that into pick_dataset
+# then filter for non-pick with no, stratify by year (then get size to get 1500)
+# bind rows to make the dataset
+
 # split data
 bball_split <- down_train |>
   initial_split(prop = 0.8, strata = pick)
@@ -150,5 +152,10 @@ bball_folds <-
 
 
 save(bball_folds, file = here("results/bball_folds.rda"))
+
+
+## Extra Notes ----
+# remember to not save_pred in the fits
+
 
 

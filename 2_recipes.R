@@ -48,3 +48,22 @@ save(basic_rec, file = here("results/basic_rec.rda"))
 
 
 ## Boosted Tree Recipe ----
+
+
+## Extra notes for recipes ----
+
+# In terms of recipes for the six models above, I plan to make about four recipes. This is because I'm going to use a basic (kitchen-sink) recipe for the null and logistic models. A separate trees-based recipe will be created for usage with the random forest and boosted trees model. Also, I plan to make another recipe that corresponds well with the k-nearest neighbors model. Finally, another recipe will be made to adjust for the naive bayes model because the 'step_dummy()' function won't be utilized with this model.
+
+#distinct recipes for both model types
+#- then variants of each
+#- at least 4 recipes
+#- 5th recipe for null/baseline
+
+#tree-based recipes don't need factors turned into numbers
+
+#knn - can do linear or tree-based (probably tree-based in literature)
+#- could use both
+
+#math formulation difference
+
+#parametric vs not
