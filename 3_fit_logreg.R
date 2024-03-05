@@ -3,9 +3,7 @@
 ## packages and datasets
 library(tidyverse)
 library(skimr)
-library(ggplot2)
 library(here)
-library(naniar)
 library(knitr)
 library(rsample)
 library(tidymodels)
@@ -42,7 +40,7 @@ logreg_wflow <- workflow() |>
 logreg_fit <- logreg_wflow |> 
   fit_resamples(
     resamples = bball_folds,
-    control = control_resamples(save_pred = TRUE, save_workflow = TRUE)
+    control = control_resamples(save_workflow = TRUE)
   )
 
 

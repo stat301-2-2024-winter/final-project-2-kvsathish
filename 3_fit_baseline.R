@@ -3,9 +3,7 @@
 ## packages and datasets
 library(tidyverse)
 library(skimr)
-library(ggplot2)
 library(here)
-library(naniar)
 library(knitr)
 library(rsample)
 library(tidymodels)
@@ -41,7 +39,7 @@ null_workflow <- workflow() |>
 null_fit <- null_workflow |> 
   fit_resamples(
     resamples = bball_folds, 
-    control = control_resamples(save_pred = TRUE, save_workflow = TRUE)
+    control = control_resamples(save_workflow = TRUE)
   )
 
 # save fit

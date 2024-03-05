@@ -3,9 +3,7 @@
 ## load packages and necessary data
 library(tidyverse)
 library(skimr)
-library(ggplot2)
 library(here)
-library(naniar)
 library(knitr)
 library(rsample)
 library(tidymodels)
@@ -21,7 +19,7 @@ load("results/bball_folds.rda")
 # handle common conflicts
 tidymodels_prefer()
 
-## Logistic Regression Recipe ----
+## Baseline + Logistic Regression Recipe ----
 
 # basic recipe
 basic_rec <- 
@@ -44,6 +42,25 @@ basic_rec |>
 # save recipe
 save(basic_rec, file = here("results/basic_rec.rda"))
 
+## Naive Bayes Recipe ----
+nb_rec <- 
+  recipe(pick ~ ., data = bball_train) |> 
+  step_rm(player_name, ht, num, pfr, year, pid, type,
+          rimmade, rimmade_rimmiss, midmade, midmade_midmiss,
+          rimmade_rimmade_rimmiss, midmade_midmade_midmiss,
+          dunksmiss_dunksmade, dunksmade_dunksmade_dunksmiss, x65) |> 
+  step_zv(all_predictors()) |> 
+  step_impute_mean(all_numeric_predictors()) 
+
+# check recipe
+nb_rec |> 
+  prep() |> 
+  bake(new_data = NULL) |> 
+  glimpse()
+
+# save recipe
+save(nb_rec, file = here("results/nb_rec.rda"))
+
 ## Tree-Based Recipe ----
 
 
@@ -52,7 +69,11 @@ save(basic_rec, file = here("results/basic_rec.rda"))
 
 ## Extra notes for recipes ----
 
-# In terms of recipes for the six models above, I plan to make about four recipes. This is because I'm going to use a basic (kitchen-sink) recipe for the null and logistic models. A separate trees-based recipe will be created for usage with the random forest and boosted trees model. Also, I plan to make another recipe that corresponds well with the k-nearest neighbors model. Finally, another recipe will be made to adjust for the naive bayes model because the 'step_dummy()' function won't be utilized with this model.
+# In terms of recipes for the six models above, I plan to make about four recipes. 
+# This is because I'm going to use a basic (kitchen-sink) recipe for the null and logistic models. 
+# A separate trees-based recipe will be created for usage with the random forest and boosted trees model. 
+# Also, I plan to make another recipe that corresponds well with the k-nearest neighbors model. 
+# Finally, another recipe will be made to adjust for the naive bayes model because the 'step_dummy()' function won't be utilized with this model.
 
 #distinct recipes for both model types
 #- then variants of each

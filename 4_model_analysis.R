@@ -3,9 +3,7 @@
 ## packages and datasets
 library(tidyverse)
 library(skimr)
-library(ggplot2)
 library(here)
-library(naniar)
 library(knitr)
 library(rsample)
 library(tidymodels)
@@ -22,6 +20,7 @@ load("results/basic_rec.rda")
 
 load("results/null_fit.rda")
 load("results/logreg_fit.rda")
+load("results/nb_fit.rda")
 
 # handle common conflicts
 tidymodels_prefer()
@@ -40,10 +39,15 @@ logreg_accuracy <- logreg_fit |>
   collect_metrics() |> 
   filter(.metric == "accuracy")
 
+nb_accuracy <- nb_fit |> 
+  collect_metrics() |> 
+  filter(.metric == "accuracy")
+
 # format into a table
 accuracy_table <- bind_rows(
   mutate(null_accuracy, model = "Null Model"),
-  mutate(logreg_accuracy, model = "Logistic Regression")
+  mutate(logreg_accuracy, model = "Logistic Regression"),
+  mutate(nb_accuracy, model = "Naive Bayes Model")
 ) |> 
   select(model, everything())
 
