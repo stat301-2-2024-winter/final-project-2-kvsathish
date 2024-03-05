@@ -1,0 +1,55 @@
+---
+title: "The NBA Draft: Predicting Draft Selection among College Basketball Players"
+subtitle: |
+  | Final Project 
+  | Data Science 2 with R (STAT 301-2)
+author: "Karthik Sathish"
+date: today
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: false
+  warning: false
+
+from: markdown+emoji 
+reference-location: margin
+citation-location: margin
+---
+
+
+
+::: {.callout-tip icon=false}
+
+## Github Repo Link
+
+[My Github Repo Link](https://github.com/stat301-2-2024-winter/final-project-2-kvsathish.git)
+
+:::
+
+
+## Introduction
+
+
+## Data Overview
+
+
+## Methods
+
+
+## Model Building & Selection
+
+
+## Final Model Analysis
+
+
+## Conclusion
+
+
+## References
+
+
+## Appendix: if needed

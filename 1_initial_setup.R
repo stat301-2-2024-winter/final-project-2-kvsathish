@@ -99,18 +99,52 @@ bball_players |>
     count = n()
   )
 
-# downsampling
-down_split <- bball_players |> 
-  initial_split(prop = 0.05, strata = pick)
+
+# filter for yes pick
+pick_data <- bball_players |> 
+  filter(pick == "Yes")
+
+pick_data |> 
+  select(pick) |> 
+  summarize(
+    count = n()
+  )
+
+# filter for no pick
+no_pick <- bball_players |> 
+  filter(pick == "No")
+
+no_pick |> 
+  select(pick) |> 
+  summarize(
+    count = n()
+  )
+
+# downsample no pick and stratify by year
+down_split <- no_pick |> 
+  initial_split(prop = 0.025, strata = year)
 
 down_train <- training(down_split)
+
+
+# combine yes and no pick datasets
+draft_data <- bind_rows(pick_data, down_train)
+
+
+# visualize pick with final dataset
+draft_data |> 
+  ggplot(aes(x = pick)) +
+  geom_bar() +
+  labs(title = "Distribution of `pick`",
+       y = NULL) +
+  theme_minimal()
 
 # first filter for yes in pick, then store that into pick_dataset
 # then filter for non-pick with no, stratify by year (then get size to get 1500)
 # bind rows to make the dataset
 
 # split data
-bball_split <- down_train |>
+bball_split <- draft_data |>
   initial_split(prop = 0.8, strata = pick)
 
 
@@ -121,13 +155,6 @@ save(bball_split, file = here("results/bball_split.rda"))
 save(bball_train, file = here("results/bball_train.rda"))
 save(bball_test, file = here("results/bball_test.rda"))
 
-# visualize target variable pick again after manipulation
-bball_train |> 
-  ggplot(aes(x = pick)) +
-  geom_bar() +
-  labs(title = "Distribution of `pick`",
-       y = NULL) +
-  theme_minimal()
 
 # view dimensions of training and testing sets
 train_dims <- dim(bball_train)
