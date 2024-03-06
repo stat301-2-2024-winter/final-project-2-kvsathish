@@ -62,6 +62,25 @@ nb_rec |>
 save(nb_rec, file = here("results/nb_rec.rda"))
 
 ## Tree-Based Recipe ----
+trees_rec <- 
+  recipe(pick ~ ., data = bball_train) |> 
+  step_rm(player_name, ht, num, pfr, year, pid, type,
+          rimmade, rimmade_rimmiss, midmade, midmade_midmiss,
+          rimmade_rimmade_rimmiss, midmade_midmade_midmiss,
+          dunksmiss_dunksmade, dunksmade_dunksmade_dunksmiss, x65) |> 
+  step_dummy(all_nominal_predictors(), one_hot = TRUE) |> 
+  step_zv(all_predictors()) |> 
+  step_impute_mean(all_numeric_predictors()) |> 
+  step_normalize(all_predictors())
+
+# check recipe
+trees_rec |> 
+  prep() |> 
+  bake(new_data = slice_head(bball_train)) |> 
+  glimpse()
+
+# save recipe
+save(trees_rec, file = here("results/trees_rec.rda"))
 
 
 ## Boosted Tree Recipe ----

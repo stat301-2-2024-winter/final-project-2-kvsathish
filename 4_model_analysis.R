@@ -21,6 +21,7 @@ load("results/basic_rec.rda")
 load("results/null_fit.rda")
 load("results/logreg_fit.rda")
 load("results/nb_fit.rda")
+load("results/rf_fit.rda")
 
 # handle common conflicts
 tidymodels_prefer()
@@ -43,11 +44,16 @@ nb_accuracy <- nb_fit |>
   collect_metrics() |> 
   filter(.metric == "accuracy")
 
+rf_accuracy <- rf_fit |> 
+  collect_metrics() |> 
+  filter(.metric == "accuracy")
+
 # format into a table
 accuracy_table <- bind_rows(
   mutate(null_accuracy, model = "Null Model"),
   mutate(logreg_accuracy, model = "Logistic Regression"),
-  mutate(nb_accuracy, model = "Naive Bayes Model")
+  mutate(nb_accuracy, model = "Naive Bayes Model"),
+  mutate(rf_accuracy, model = "Random Forest Model")
 ) |> 
   select(model, everything())
 
