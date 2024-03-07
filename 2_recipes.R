@@ -33,6 +33,16 @@ basic_rec <-
   step_impute_mean(all_numeric_predictors()) |> 
   step_normalize(all_predictors())
 
+# check step_corr(all_numeric_) to account for variables (5 variables for like 3 point shooting)
+# removing certain things
+# interaction - 
+# step_ns for non linear issues 
+# term_categorical for making factor
+lit review (only include these) - main knowledge
+
+# no interactions for trees
+
+
 # check recipe
 basic_rec |> 
   prep() |> 
