@@ -25,22 +25,36 @@ tidymodels_prefer()
 num_cores <- parallel::detectCores(logical=TRUE)
 registerDoParallel(cores=num_cores)
 
-# specify model
-rf_spec <- rand_forest() |> 
-  set_engine("ranger") |> 
-  set_mode("classification") 
+# specify model for tuning
+knn_mod <- nearest_neighbor(
+  neighbors = tune()
+) |> 
+  set_engine("kknn") |> 
+  set_mode("classification")
+
+extract_parameter_set_dials(knn_mod)
+
 
 # define workflow
-rf_workflow <- workflow() |> 
-  add_model(rf_spec) |>  
+knn_mod_wflow <- workflow() |> 
+  add_model(knn_mod) |>  
   add_recipe(trees_rec)
 
-# fit model
-rf_fit <- rf_workflow |> 
-  fit_resamples(
-    resamples = bball_folds, 
-    control = control_resamples(save_workflow = TRUE)
+# hyperparam values for tuning
+knn_params <- extract_parameter_set_dials(knn_mod)
+
+knn_grid <- grid_regular(knn_params, levels = 5)
+
+knn_tune <- knn_mod_wflow |> 
+  tune_grid(
+    bball_folds, 
+    grid = knn_grid,
+    control = control_grid(save_workflow = TRUE)
   )
 
 # save fit
-save(rf_fit, file = here("results/rf_fit.rda"))
+save(knn_tune, file = here("results/knn_tune.rda"))
+
+# find most accurate model
+knn_best <- show_best(knn_tune, metric = "accuracy")
+knn_best
