@@ -30,11 +30,44 @@ citation-location: margin
 
 :::
 
+```{r}
+#| echo: false
+
+# load packages and datasets
+
+```
+
 
 ## Introduction
 
+The NBA Draft is a special event where all 30 teams within the National Basketball Association have the opportunity to select young basketball player(s) for the future of their respective franchise. While there has been a recent transition to drafting players from overseas, I wanted to look into what specifically qualifies NCAA college basketball players to get selected by an NBA team in the draft. Becoming a professional basketball player is very difficult, with only about 1.2% of collegiate players making the jump to the NBA. Numerous factors play into an NBA selection, from athletic skills to prospective talent and discipline. 
+
+However, as an avid basketball fan, I am extremely interested to see if it is possible to **predict whether a NCAA college basketball player is drafted into the NBA**, based on a range of statistics collected across all seasons played at the collegiate level.
+
+
+For this project, over 4,500 college basketball players and their respective statistics within seasons from 2009 to 2021 will be analyzed. Specifically, the `pick` variable was chosen as the target variable within the `cbb_players` dataset. The values for this variable indicated what number pick in the NBA draft each of the players achieved. Although this variable was presented as numerical variable, `pick` was manipulated to become a categorical variable. The new values are represented as (`Yes`/`No`) for whether a player was picked or drafted. 
+
+
+The resulting prediction model might not change the world, but it piques my interest. Basketball has always been my favorite sport to watch, and it is so exciting that I am able to conduct a thorough analysis combining basketball at the collegiate and pro level. I've always thought about why some of the greatest college basketball players do not pan out in the NBA, and this statistical analysis may reveal which factors are most important for an appropriate transition to the pro level. A prediction model would be useful to identify which prospective players may translate best into the NBA. This model could also help future players mold their game toward a more specific prototype to achieve more success in the sport. Moreover, I think it would be very interesting to also possibly see how the prototype of NBA draftees had changed over time.
+
+
+
 
 ## Data Overview
+
+
+
+Given laptop constraints, this project uses the miniature version of the [Music Streaming Sessions Dataset](https://www.aicrowd.com/challenges/spotify-sequential-skip-prediction-challenge), which is a minimally sized version of the original training set and track features provided by Spotify for challenge users to familiarize themselves with the data set.
+
+The complete data set contains 167,880 observations of 48 variables. Each observation corresponds to the playback of one track, for a total of 167,880 tracks listened to during 10,000 unique listening sessions, representing 50,704 unique tracks.
+
+Each listening session contained information on the order that tracks were listened to and whether or not the track was skipped. Each track contained information on over 25 of its different properties, such as its popularity; musical classifications like key, time signature, and tempo; or Spotify-specific classifications like danceability, bounciness, speechiness, or liveness. For more information on the data, please refer to the `README.me` codebook.
+
+Analysis of the target variable revealed no major issues and proportions of songs skipped or not skipped were approximately even. There was no missingness in any of the variables. Exploratory data analysis demonstrated correlations between skip behavior and other listening variables, like the way a track was started.
+
+![](images/stacked_start.png)
+
+Overall, initial explorations support the viability of a predictive model.
 
 
 ## Methods
@@ -50,6 +83,11 @@ citation-location: margin
 
 
 ## References
+
+For my analysis above, I am utilizing a singular dataset called `CollegeBasketballPlayers2009-2021.csv` to compare over 4500 college basketball players from 2009 to 2021.
+
+The source of my data is a user on `Kaggle.com`, named Aditya Kumar. They are a computer science major at the University of Southern California with roots in Los Angeles, California. The data card is named `College Basketball 2009-2021 + NBA Advanced Stats`^[Found on [https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data](https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data)]. Although all the stats were compiled by Aditya, the raw statistical data should be credited to Bart Torvik^[Found on [https://barttorvik.com/](https://barttorvik.com/)].
+
 
 
 ## Appendix: if needed
