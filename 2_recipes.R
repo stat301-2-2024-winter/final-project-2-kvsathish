@@ -91,18 +91,79 @@ save(trees_rec, file = here("results/trees_rec.rda"))
 
 # no interactions for trees
 
+# ortg, e_fg, ts_per, orb_per, ast_per, to_per,
+# ftm, ft_per, two_pm, two_p_per, tpm, tp_per, porpag,
+# adjoe, obpm, ogbpm, oreb, ast, pts,
 
 ## New Recipe Variant (based on offensive stats b/c NBA) ----
 off_rec <- 
-  recipe(pick ~ ortg, , data = bball_train) |> 
-  step_rm(player_name, ht, num, pfr, year, pid, type,
-          rimmade, rimmade_rimmiss, midmade, midmade_midmiss,
+  # only include variables that are related to offensive output
+  recipe(pick ~ ., data = bball_train) |> 
+  step_rm(player_name, team, conf, gp, min_per, usg, drb_per,
+          fta, two_pa, tpa, blk_per, stl_per, ftr, yr, ht, num, 
+          pfr, year, pid, type, rec_rank, ast_tov, rimmade, 
+          rimmade_rimmiss, midmade, midmade_midmiss,
           rimmade_rimmade_rimmiss, midmade_midmade_midmiss,
-          dunksmiss_dunksmade, dunksmade_dunksmade_dunksmiss, x65) |> 
+          dunksmiss_dunksmade, dunksmade_dunksmade_dunksmiss, 
+          x65, drtg, adrtg, dporpag, stops, bpm, dbpm, gbpm, mp,
+          dgbpm, dreb, treb, stl, blk, x66) |> 
+  # dummy variables
   step_dummy(all_nominal_predictors()) |> 
-  step_zv(all_predictors()) |> 
+  # deal with missing values for some observations
   step_impute_mean(all_numeric_predictors()) |> 
-  step_normalize(all_predictors())
+  # correlations between all numerical variables
+  step_corr(all_numeric_predictors()) |> 
+  # interaction between assist percentage and turnover percentage
+  step_interact(terms = ~ ast_per:to_per) |> 
+  # normalize so the data is scaled appropriately
+  step_normalize(all_predictors()) |> 
+  # account for zero variance
+  step_zv(all_predictors()) 
+
+# check recipe
+off_rec |> 
+  prep() |> 
+  bake(new_data = NULL) |> 
+  glimpse()
+
+# save recipe
+save(off_rec, file = here("results/off_rec.rda"))
+
+
+## New Trees Recipe Variant (based on offensive stats b/c NBA) ----
+off_trees <- 
+  # only include variables that are related to offensive output
+  recipe(pick ~ ., data = bball_train) |> 
+  step_rm(player_name, team, conf, gp, min_per, usg, drb_per,
+          fta, two_pa, tpa, blk_per, stl_per, ftr, yr, ht, num, 
+          pfr, year, pid, type, rec_rank, ast_tov, rimmade, 
+          rimmade_rimmiss, midmade, midmade_midmiss,
+          rimmade_rimmade_rimmiss, midmade_midmade_midmiss,
+          dunksmiss_dunksmade, dunksmade_dunksmade_dunksmiss, 
+          x65, drtg, adrtg, dporpag, stops, bpm, dbpm, gbpm, mp,
+          dgbpm, dreb, treb, stl, blk, x66) |> 
+  # dummy variables
+  step_dummy(all_nominal_predictors(), one_hot = TRUE) |> 
+  # deal with missing values for some observations
+  step_impute_mean(all_numeric_predictors()) |> 
+  # correlations between all numerical variables
+  step_corr(all_numeric_predictors()) |> 
+  # interaction between assist percentage and turnover percentage
+  step_interact(terms = ~ ast_per:to_per) |> 
+  # normalize so the data is scaled appropriately
+  step_normalize(all_predictors()) |> 
+  # account for zero variance
+  step_zv(all_predictors()) 
+
+# check recipe
+off_trees |> 
+  prep() |> 
+  bake(new_data = NULL) |> 
+  glimpse()
+
+# save recipe
+save(off_trees, file = here("results/off_trees.rda"))
+
 
 ## Extra notes for recipes ----
 
