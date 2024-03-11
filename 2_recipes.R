@@ -33,16 +33,6 @@ basic_rec <-
   step_impute_mean(all_numeric_predictors()) |> 
   step_normalize(all_predictors())
 
-# check step_corr(all_numeric_) to account for variables (5 variables for like 3 point shooting)
-# removing certain things
-# interaction - 
-# step_ns for non linear issues 
-# term_categorical for making factor
-lit review (only include these) - main knowledge
-
-# no interactions for trees
-
-
 # check recipe
 basic_rec |> 
   prep() |> 
@@ -92,9 +82,27 @@ trees_rec |>
 # save recipe
 save(trees_rec, file = here("results/trees_rec.rda"))
 
+# check step_corr(all_numeric_) to account for variables (5 variables for like 3 point shooting)
+# removing certain things
+# interaction - 
+# step_ns for non linear issues 
+# term_categorical for making factor
+# lit review (only include these) - main knowledge
 
-## Boosted Tree Recipe ----
+# no interactions for trees
 
+
+## New Recipe Variant (based on offensive stats b/c NBA) ----
+off_rec <- 
+  recipe(pick ~ ortg, , data = bball_train) |> 
+  step_rm(player_name, ht, num, pfr, year, pid, type,
+          rimmade, rimmade_rimmiss, midmade, midmade_midmiss,
+          rimmade_rimmade_rimmiss, midmade_midmade_midmiss,
+          dunksmiss_dunksmade, dunksmade_dunksmade_dunksmiss, x65) |> 
+  step_dummy(all_nominal_predictors()) |> 
+  step_zv(all_predictors()) |> 
+  step_impute_mean(all_numeric_predictors()) |> 
+  step_normalize(all_predictors())
 
 ## Extra notes for recipes ----
 
