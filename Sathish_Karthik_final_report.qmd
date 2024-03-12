@@ -34,6 +34,21 @@ citation-location: margin
 #| echo: false
 
 # load packages and datasets
+library(tidyverse)
+library(skimr)
+library(here)
+library(naniar)
+library(knitr)
+library(tidymodels)
+set.seed(423)
+
+cbb_players <- read_csv("data/CollegeBasketballPlayers2009-2021.csv")
+load(here("data/bball_players.rda"))
+
+# handle common conflicts
+tidymodels_prefer()
+
+
 
 ```
 
@@ -42,10 +57,7 @@ citation-location: margin
 
 The NBA Draft is a special event where all 30 teams within the National Basketball Association have the opportunity to select young basketball player(s) for the future of their respective franchise. While there has been a recent transition to drafting players from overseas, I wanted to look into what specifically qualifies NCAA college basketball players to get selected by an NBA team in the draft. Becoming a professional basketball player is very difficult, with only about 1.2% of collegiate players making the jump to the NBA. Numerous factors play into an NBA selection, from athletic skills to prospective talent and discipline. 
 
-However, as an avid basketball fan, I am extremely interested to see if it is possible to **predict whether a NCAA college basketball player is drafted into the NBA**, based on a range of statistics collected across all seasons played at the collegiate level.
-
-
-For this project, over 4,500 college basketball players and their respective statistics within seasons from 2009 to 2021 will be analyzed. Specifically, the `pick` variable was chosen as the target variable within the `cbb_players` dataset. The values for this variable indicated what number pick in the NBA draft each of the players achieved. Although this variable was presented as numerical variable, `pick` was manipulated to become a categorical variable. The new values are represented as (`Yes`/`No`) for whether a player was picked or drafted. 
+However, as an avid basketball fan, I am extremely interested to see if it is possible to **predict whether a NCAA college basketball player is drafted into the NBA**, based on a range of statistics collected across all seasons played at the collegiate level. The [College Basketball Players Dataset](https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data) is utilized for my thorough analysis.
 
 
 The resulting prediction model might not change the world, but it piques my interest. Basketball has always been my favorite sport to watch, and it is so exciting that I am able to conduct a thorough analysis combining basketball at the collegiate and pro level. I've always thought about why some of the greatest college basketball players do not pan out in the NBA, and this statistical analysis may reveal which factors are most important for an appropriate transition to the pro level. A prediction model would be useful to identify which prospective players may translate best into the NBA. This model could also help future players mold their game toward a more specific prototype to achieve more success in the sport. Moreover, I think it would be very interesting to also possibly see how the prototype of NBA draftees had changed over time.
@@ -55,22 +67,56 @@ The resulting prediction model might not change the world, but it piques my inte
 
 ## Data Overview
 
+Within the raw dataset `cbb_players`, there are 66 total variables and 61,061 total observations. Furthermore, there are 7 categorical variables as well as 59 numerical variables. In terms of missingness, there are missing values present in 35 of the variables. @tbl-missingness reveals the `missing_percentage` or the percentage of values that are missing in each column with missingness. These `NA` values are accounted for during my analysis of the dataset to make predictive models.
+
+```{r}
+#| echo: false
+#| label: tbl-missingness
+#| tbl-cap: Summary of Variables with Missing Values
+# display missingness
+missing_summary <- cbb_players |> 
+  summarise_all(~mean(is.na(.)) * 100) |> 
+  gather(variable, missing_percentage) |> 
+  filter(missing_percentage > 0) |> 
+  arrange(desc(missing_percentage))
+
+kable(missing_summary, 
+      col.names = c("Variable", "Missing Percentage"),
+      caption = "Variables with Missing Values")
+```
 
 
-Given laptop constraints, this project uses the miniature version of the [Music Streaming Sessions Dataset](https://www.aicrowd.com/challenges/spotify-sequential-skip-prediction-challenge), which is a minimally sized version of the original training set and track features provided by Spotify for challenge users to familiarize themselves with the data set.
+For this project, college basketball players and their respective statistics, within seasons from 2009 to 2021, will be analyzed. Specifically, the `pick` variable was chosen as the target variable within the `cbb_players` dataset. The values for this variable indicated what number pick in the NBA draft each of the players achieved. Although this variable was presented as numerical variable, `pick` was manipulated to become a categorical variable. The new values are represented as (`Yes`/`No`) for whether a player was picked or not. 
 
-The complete data set contains 167,880 observations of 48 variables. Each observation corresponds to the playback of one track, for a total of 167,880 tracks listened to during 10,000 unique listening sessions, representing 50,704 unique tracks.
 
-Each listening session contained information on the order that tracks were listened to and whether or not the track was skipped. Each track contained information on over 25 of its different properties, such as its popularity; musical classifications like key, time signature, and tempo; or Spotify-specific classifications like danceability, bounciness, speechiness, or liveness. For more information on the data, please refer to the `README.me` codebook.
+Due to the significant imbalance between college basketball players that were drafted compared to undrafted, the analysis is conducted with a much smaller version of the original dataset. The new dataset `draft_data` was utilized to create a new training and testing set that would help facilitate predictive modelling for the challenge at hand. This new dataset also accounts for the missingness above by transforming certain variables like `rec_rank` (Recruiting rank from high school) from a numerical variable to a categorical one.
 
-Analysis of the target variable revealed no major issues and proportions of songs skipped or not skipped were approximately even. There was no missingness in any of the variables. Exploratory data analysis demonstrated correlations between skip behavior and other listening variables, like the way a track was started.
 
-![](images/stacked_start.png)
+![](images/draft_pic.png)
 
-Overall, initial explorations support the viability of a predictive model.
+Following the creation of an approxmiately uniform dataset for the variable `pick` that also accounted for missingness, predictive modelling was viable. Plus, each of the observations (unique players) correspond to over 60 different characteristics or statistics for appropriate and thorough analysis. More information about each of the recorded stats can be found in the `bball_players_codebook` text file within the `data` subdirectory.
 
 
 ## Methods
+Should cover the data splitting procedure and clearly identify what type of prediction problem it is. State and describe the model types you will be fitting. Describe any parameters that will be tuned. Describe what recipes will be used. Describe the resampling technique used. In some cases an extended discussion about recipe variations might be useful. Especially if students are using recipe variation to try and explore the predictive importance of certain variables. Explain the metric that will be used to compare and ultimately used to select a final model.
+
+### Overview
+
+Since a variety of predictor variables are utilized to predict whether a NCAA college basketball player is drafted or not, this prediction problem is identified as a simple classification problem.
+
+### Data Splitting and Resampling
+
+Before 
+
+I plan to create a new dataset. First, I will create a `pick_dataset` that includes only the players that got drafted ("yes" value in the `pick` column). Then, I will create a `non_pick_dataset` that includes only undrafted players, and I'll make sure to stratify the new dataset by `year` to fairly collect players from 2009-2021. With the `non_pick_dataset`, I will then down sample it to approximately match the number of observations in the `pick_dataset`. Finally, I will utilize the `bind_rows()` function to combine both datasets into one complete dataset for analysis. Once this new suitable dataset for predictive modelling is created, I will repeat the same fitting or tuning process for each of the chosen models. The only thing to keep in mind is that the Null Model will be useless. It will reflect a value near 0.5 because there are approximately the same number of undrafted and drafted players. The balanced data renders the null model as useless because null models only make predictions off the majority class. This will be kept in mind as I choose a new baseline model prior to thorough analysis. Outside of this major issue, I am not concerned with much else. If more observations are needed, I will also incorporate players from the 2022 dataset. All in all, I feel confident moving forward with the final project.
+
+### Modelling
+
+### Recipes
+
+### Evaluation Metric
+
+
 
 
 ## Model Building & Selection
@@ -88,6 +134,8 @@ For my analysis above, I am utilizing a singular dataset called `CollegeBasketba
 
 The source of my data is a user on `Kaggle.com`, named Aditya Kumar. They are a computer science major at the University of Southern California with roots in Los Angeles, California. The data card is named `College Basketball 2009-2021 + NBA Advanced Stats`^[Found on [https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data](https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data)]. Although all the stats were compiled by Aditya, the raw statistical data should be credited to Bart Torvik^[Found on [https://barttorvik.com/](https://barttorvik.com/)].
 
+
+### Citations
 
 
 ## Appendix: if needed

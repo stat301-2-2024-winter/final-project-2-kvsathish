@@ -132,12 +132,21 @@ draft_data <- bind_rows(pick_data, down_train)
 
 
 # visualize pick with final dataset
-draft_data |> 
+draft_pic <- draft_data |> 
   ggplot(aes(x = pick)) +
-  geom_bar() +
+  geom_bar(fill = "skyblue") +
   labs(title = "Distribution of `pick`",
        y = NULL) +
   theme_minimal()
+
+# save plot
+ggsave(
+  filename = "images/draft_pic.png",
+  plot = draft_pic,
+  units = "in",
+  width = 6,
+  height = 4
+)
 
 # first filter for yes in pick, then store that into pick_dataset
 # then filter for non-pick with no, stratify by year (then get size to get 1500)
