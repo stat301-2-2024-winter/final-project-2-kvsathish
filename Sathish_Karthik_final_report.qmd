@@ -44,6 +44,8 @@ set.seed(423)
 
 cbb_players <- read_csv("data/CollegeBasketballPlayers2009-2021.csv")
 load(here("data/bball_players.rda"))
+load(here("results/bball_train.rda"))
+load(here("results/bball_test.rda"))
 
 # handle common conflicts
 tidymodels_prefer()
@@ -162,14 +164,14 @@ For the logistic regression and elastic net models:
 
   - Basic Recipe (`basic_rec`): This preprocessing involved a standard kitchen sink recipe that utilized all the variables except those with zero variance, missingness issues, or were unrelated to the target variable. Dummy variables were made out of the nominal variables and the data was appropriately scaled.
   
-  - Variant Recipe (`off_rec`): This feature engineered recipe was created to evaluate whether a better predictive model could be produced by using solely utilizing offensive output for each basketball player. The thought process behind this recipe was that the NBA is often associated with pure offensive skill. Defense if often overlooked and it is generally thought that offensive talent and output in college translates best to the NBA. In order to test this, the preprocessing involved removing all variables unrelated to offensive output, converting nominal variables to dummy variables, imputing means for missing values for numerical variables, correlating numerical variables that are related, creating an interaction between assist percentage and turnover percentage, appropriately scaling the data, and accounting for variables with zero variance.
+  - Variant Recipe (`off_rec`): This feature engineered recipe was created to evaluate whether a better predictive model could be produced by using solely utilizing offensive output for each basketball player. The thought process behind this recipe was that the NBA is often associated with pure offensive skill. Defense if often overlooked and it is generally thought that offensive talent and output in college translates best to the NBA. In order to test this, the preprocessing involved removing all variables unrelated to offensive output, converting nominal variables to dummy variables, imputing means for missing values in the numerical variables, correlating numerical variables that are related, creating an interaction between assist percentage and turnover percentage, appropriately scaling the data, and accounting for variables with zero variance.
 
 
 For the boosted tree, k-nearest neighbor, and random forest models:
 
   - Basic Recipe (`trees_rec`): This preprocessing involved a standard kitchen sink recipe for trees that utilized all the variables except those with zero variance, missingness issues, or were unrelated to the target variable. Dummy variables were made out of the nominal variables and the data was appropriately scaled.
 
-  - Variant Recipe (`off_trees`): This feature engineered trees recipe was created to evaluate whether a better predictive model could be produced by using solely utilizing offensive output for each basketball player. The thought process behind this recipe was that the NBA is often associated with pure offensive skill. Defense if often overlooked and it is generally thought that offensive talent and output in college translates best to the NBA. In order to test this, the preprocessing involved removing all variables unrelated to offensive output, converting nominal variables to dummy variables, imputing means for missing values for numerical variables, correlating numerical variables that are related, appropriately scaling the data, and accounting for variables with zero variance.
+  - Variant Recipe (`off_trees`): This feature engineered trees recipe was created to evaluate whether a better predictive model could be produced by using solely utilizing offensive output for each basketball player. The thought process behind this recipe was that the NBA is often associated with pure offensive skill. Defense if often overlooked and it is generally thought that offensive talent and output in college translates best to the NBA. In order to test this, the preprocessing involved removing all variables unrelated to offensive output, converting nominal variables to dummy variables, imputing means for missing values in the numerical variables, correlating numerical variables that are related, appropriately scaling the data, and accounting for variables with zero variance.
 
 
 ### Evaluation Metric
@@ -178,7 +180,6 @@ Due to the classification problem at hand, the models will be compared with the 
 
 
 ## Model Building & Selection Results
-determine which will be the final/winning model. Could include a discussion comparing any systematic differences in performance between model types or recipes. If variations in recipes were used to explore predictive importance of certain variables, then it should be discussed here. The section will likely end with the selection of the final/winning model (provide your reasoning). Was it surprising or not surprising that this particular model won? Explain.
 
 
 ### Overview
@@ -307,8 +308,67 @@ The elastic net model, using the basic recipe for fitting, is the winning model 
 ## Final Model Analysis
 
 
+### Results of Fitting Winning Model to Testing Data
+
+```{r}
+#| echo: false
+#| label: tbl-final
+#| tbl-cap: Accuracy for Final Elastic Net Model on Testing Data 
+
+load("results/final_fit.rda")
+
+bball_test <- bball_test |> 
+  mutate(pick = factor(pick))
+
+# make metric set
+bball_metric <- metric_set(accuracy)
+
+# tibble of predicted values
+en_predict <- bball_test |> 
+  bind_cols(predict(final_fit, bball_test)) |> 
+  select(pick, .pred_class)
+
+# apply metrics to predictions
+bball_metric(en_predict, truth = pick, estimate = .pred_class) |> 
+  select(.metric, .estimate) |> 
+  kable(align = "c", col.names = c("Metric", "Estimate"), 
+        caption = "Evaluation of Predictions by Elastic Net using Accuracy")
+```
+
+@tbl-final refects the accuracy metric for the winning model. It reveals that the final elastic net model was approximately 92.31% correct when predicting whether a NCAA college basketball player was drafted into the NBA or not within the testing data. Generally, this means that the best elastic net model was 92.31% correct when predicting whether a collegiate player is drafted or goes undrafted into the NBA.
+
+
+### Visualization of Final Model's Accuracy
+
+![Heatmap of Predictions vs. True Values for Final Model](images/conf_mat_heatmap.png){#fig-heat}
+
+@fig-heat shows that the false positives (prediction that a player is drafted but the real outcome is undrafted) can be found on the bottom left (35) while the false positives (prediction that player goes undrafted but the real outcome is drafted) can be found on the top right (10). For appropriate analysis, "yes" means a player was drafted, while "no" means a player went undrafted. Within the matrix above, there are 277 "yes-yes" values which means that the model was correct at predicting a player receiving a selection into the NBA 277 times. Meanwhile, there was 263 "no-no" values, which reflects the opposite. This means the model was correct at predicting a player going undrafted into the NBA 263 times.
+
+Due to the high accuracy value for the final model, presented in @tbl-final, this winning elastic net model is good at addressing the prediction problem. The effort put in to construct this predictive model was worth it because it proved much better than the baseline naive bayes model. The difference in accuracy metric was 92.3% compared to 84.8% for the baseline model. This indicates a 7.5% difference in correctly predicting whether a NCAA college basketball player is drafted into the NBA or not.
+
+
+#### Discussion of Target Variable
+
+Even though the target variable `pick` was transformed from a numerical variable to a categorical variable, it is not necessary to conduct an analysis of the original numerical scale of this variable. This is because the prediction problem was presented as a classification problem, so the constructed models and utilized accuracy metrics would not be predictive of the original `pick` variable on a numerical scale.
+
 
 ## Conclusion
+
+
+### Final Interpretation
+
+The best model in terms of predictive capacity for evaluating whether a NCAA college basketball player is selected in the NBA draft is the elastic net model with the basic (kitchen sink) recipe. This elastic net model has a relatively weak regularization of Lasso or Ridge (penalty = 0.001) and a greater dependence on the Lasso term compared to the Ridge term (mixture = 0.75). The performance of this model was justified by the greatest accuracy value of all the models.
+
+### Future Directions 
+
+In order to further improve the model's performance, a greater subset of players could be analyzed. The current dataset was limited to players between 2009 to 2021, so increasing the number of players for evaluation for past years could yield better predictive power.
+
+One limitation for further analysis is how lobsided the number of college basketball players that go undrafted compared to those that are drafted. This issue makes it difficult to naturally collect uniform data for predictive modelling. Collection of more observations (players) could help address this problem.
+
+Also, the NBA Draft has recently shifted over to drafting many more players from overseas. This drastically limits the already small number of NCAA collegiate players that get drafted. A possible next step could be also including foreign basketball prospects to aid in the predictive power for the future.
+
+Finally, a new proposed research project could entail evaluating a college player/team's success in March Madness with getting drafted. Since this is a big stage, full of high pressure situations, performance during March in college basketball could possibly be used to predict whether a college player is drafted. This also helps achieve more uniform data because players participating in the NCAA tournament are within the top 68 teams in the country.
+
 
 
 ## References
@@ -320,5 +380,8 @@ The source of my data is a user on `Kaggle.com`, named Aditya Kumar. They are a 
 
 ### Citations
 
+Kumar, A. (2022). College Basketball 2009-2021 + NBA Advanced Stats. Kaggle.com. [https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data](https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data)
 
-## Appendix: if needed
+
+Torvik, B. (2024). Year Customizable T-Rank and Tempo-Free Stats. https://barttorvik.com/. [https://barttorvik.com/playerstat.php?link=y&year=2021&start=20201101&end=20210501](https://barttorvik.com/playerstat.php?link=y&year=2021&start=20201101&end=20210501)
+
