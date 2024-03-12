@@ -3001,7 +3001,13 @@ vertical-align: -.125em;
   <li><a href="#recipes" id="toc-recipes" class="nav-link" data-scroll-target="#recipes">Recipes</a></li>
   <li><a href="#evaluation-metric" id="toc-evaluation-metric" class="nav-link" data-scroll-target="#evaluation-metric">Evaluation Metric</a></li>
   </ul></li>
-  <li><a href="#model-building-selection" id="toc-model-building-selection" class="nav-link" data-scroll-target="#model-building-selection">Model Building &amp; Selection</a></li>
+  <li><a href="#model-building-selection-results" id="toc-model-building-selection-results" class="nav-link" data-scroll-target="#model-building-selection-results">Model Building &amp; Selection Results</a>
+  <ul class="collapse">
+  <li><a href="#overview-1" id="toc-overview-1" class="nav-link" data-scroll-target="#overview-1">Overview</a></li>
+  <li><a href="#best-performing-model-results" id="toc-best-performing-model-results" class="nav-link" data-scroll-target="#best-performing-model-results">Best Performing Model Results</a></li>
+  <li><a href="#best-hyperparameters-for-the-models" id="toc-best-hyperparameters-for-the-models" class="nav-link" data-scroll-target="#best-hyperparameters-for-the-models">Best Hyperparameters for the Models</a></li>
+  <li><a href="#finalwinning-model" id="toc-finalwinning-model" class="nav-link" data-scroll-target="#finalwinning-model">Final/Winning Model</a></li>
+  </ul></li>
   <li><a href="#final-model-analysis" id="toc-final-model-analysis" class="nav-link" data-scroll-target="#final-model-analysis">Final Model Analysis</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a>
@@ -3231,7 +3237,6 @@ Github Repo Link
 </section>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
-<p>Should cover the data splitting procedure and clearly identify what type of prediction problem it is. State and describe the model types you will be fitting. Describe any parameters that will be tuned. Describe what recipes will be used. Describe the resampling technique used. In some cases an extended discussion about recipe variations might be useful. Especially if students are using recipe variation to try and explore the predictive importance of certain variables. Explain the metric that will be used to compare and ultimately used to select a final model.</p>
 <section id="overview" class="level3">
 <h3 class="anchored" data-anchor-id="overview">Overview</h3>
 <p>Since a variety of predictor variables are utilized to predict whether a NCAA college basketball player is drafted or not, this prediction problem is identified as a simple classification problem.</p>
@@ -3296,8 +3301,216 @@ Github Repo Link
 <p>Due to the classification problem at hand, the models will be compared with the accuracy metric. This metric measures the proportion of correct predictions out of total predictions. In order to effectively visualize the best model, a confusion matrix will be constructed.</p>
 </section>
 </section>
-<section id="model-building-selection" class="level2">
-<h2 class="anchored" data-anchor-id="model-building-selection">Model Building &amp; Selection</h2>
+<section id="model-building-selection-results" class="level2">
+<h2 class="anchored" data-anchor-id="model-building-selection-results">Model Building &amp; Selection Results</h2>
+<p>determine which will be the final/winning model. Could include a discussion comparing any systematic differences in performance between model types or recipes. If variations in recipes were used to explore predictive importance of certain variables, then it should be discussed here. The section will likely end with the selection of the final/winning model (provide your reasoning). Was it surprising or not surprising that this particular model won? Explain.</p>
+<section id="overview-1" class="level3">
+<h3 class="anchored" data-anchor-id="overview-1">Overview</h3>
+<p>To reiterate, the accuracy metric will be utilized to compare all of the models to address the classification problem. A greater value of accuracy reflects a better model.</p>
+</section>
+<section id="best-performing-model-results" class="level3">
+<h3 class="anchored" data-anchor-id="best-performing-model-results">Best Performing Model Results</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-accuracy" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table 2: Accuracy and Standard Error of Best Performing Models</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model Type</th>
+<th style="text-align: right;">Accuracy</th>
+<th style="text-align: right;">Std Error</th>
+<th style="text-align: right;">Num_Computations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">nbayes</td>
+<td style="text-align: right;">0.848</td>
+<td style="text-align: right;">0.0030</td>
+<td style="text-align: right;">50</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">logreg</td>
+<td style="text-align: right;">0.894</td>
+<td style="text-align: right;">0.0026</td>
+<td style="text-align: right;">50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">elastic</td>
+<td style="text-align: right;">0.914</td>
+<td style="text-align: right;">0.0023</td>
+<td style="text-align: right;">50</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rf</td>
+<td style="text-align: right;">0.891</td>
+<td style="text-align: right;">0.0029</td>
+<td style="text-align: right;">50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">knn</td>
+<td style="text-align: right;">0.844</td>
+<td style="text-align: right;">0.0031</td>
+<td style="text-align: right;">50</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bt</td>
+<td style="text-align: right;">0.882</td>
+<td style="text-align: right;">0.0030</td>
+<td style="text-align: right;">50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">logreg_off</td>
+<td style="text-align: right;">0.835</td>
+<td style="text-align: right;">0.0033</td>
+<td style="text-align: right;">50</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">elastic_off</td>
+<td style="text-align: right;">0.835</td>
+<td style="text-align: right;">0.0035</td>
+<td style="text-align: right;">50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rf_off</td>
+<td style="text-align: right;">0.859</td>
+<td style="text-align: right;">0.0029</td>
+<td style="text-align: right;">50</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">knn_off</td>
+<td style="text-align: right;">0.830</td>
+<td style="text-align: right;">0.0031</td>
+<td style="text-align: right;">50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">bt_off</td>
+<td style="text-align: right;">0.854</td>
+<td style="text-align: right;">0.0029</td>
+<td style="text-align: right;">50</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><a href="#tbl-accuracy">Table 2</a> reveals the accuracy and standard error values for each model and the various recipes. It appears that the elastic net model with the basic (kitchen-sink) recipe is the best model because it corresponds with the greatest value for accuracy (91.4%) as well as the lowest standard error of all the models.</p>
+<section id="evaluation-of-recipes" class="level4">
+<h4 class="anchored" data-anchor-id="evaluation-of-recipes">Evaluation of Recipes</h4>
+</section>
+</section>
+<section id="best-hyperparameters-for-the-models" class="level3">
+<h3 class="anchored" data-anchor-id="best-hyperparameters-for-the-models">Best Hyperparameters for the Models</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-hyper" class="anchored">
+<table class="table table-sm table-striped small">
+<caption>Table 3: Best Set of Hyperparameters for the Models</caption>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 6%">
+<col style="width: 8%">
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">model</th>
+<th style="text-align: right;">mtry</th>
+<th style="text-align: right;">min_n</th>
+<th style="text-align: right;">learn_rate</th>
+<th style="text-align: right;">neighbors</th>
+<th style="text-align: right;">penalty</th>
+<th style="text-align: right;">mixture</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Boosted Tree</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.631</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">K-nearest Neighbor</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Random Forest</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Elastic Net</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.001</td>
+<td style="text-align: right;">0.75</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Boosted Tree (Off)</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.631</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">K-nearest Neighbor(Off)</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Random Forest (Off)</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Elastic Net (Off)</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.000</td>
+<td style="text-align: right;">0.75</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><a href="#tbl-hyper">Table 3</a> reveals the best hyperparameters for each of the models with the basic and (offensive) variant recipes. It is very interesting to see the differences in the best set of hyperparameters between models using the basic recipe compared to models using the feature engineered offensive output recipe. Values that retained similarity include the <code>learn_rate</code> for both boosted tree models, <code>mtry</code> for both boosted tree models as well as both random forest models, and <code>penalty/mixture</code> for both elastic models. For the future, tuning for the boosted tree and random forest models could be adjusted by increasing the value of <code>mtry</code>. Although the fitting time may increase, it appears as though the fitted models prefer to use as many predictors as possible to have the most accurate predictive capabilities.</p>
+</section>
+<section id="finalwinning-model" class="level3">
+<h3 class="anchored" data-anchor-id="finalwinning-model">Final/Winning Model</h3>
+<p>The elastic net model, using the basic recipe for fitting, is the winning model because it had the greatest value for the accuracy metric. From <a href="#tbl-hyper">Table 3</a>, it can be concluded that the best hyperparameters were 0.001 for <code>penalty</code> and 0.75 for <code>mixture</code>. Essentially, this indicates that the most accurate elastic net model has a relatively weak regularization of Lasso or Ridge (penalty = 0.001) and a greater dependence on the Lasso term compared to the Ridge term (mixture = 0.75). This resulting prediction model is somewhat surprising because this model seems to be a more simple model than some of the complex ones and relies heavily on the logistic regression. However, many of the predictor stats, at least the numeric variables, may have had strong correlation with being drafted into the NBA, so it’s not extremely surprising. Again, it is surprising that the feature engineered recipe was less accurate for all the models than the basic recipe, but it reveals that offensive output for a college player may not be as important as the overall picture in terms of receiving a selection by a NBA team in the draft.</p>
+</section>
 </section>
 <section id="final-model-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="final-model-analysis">Final Model Analysis</h2>

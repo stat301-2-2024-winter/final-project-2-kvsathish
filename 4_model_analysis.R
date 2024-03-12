@@ -16,13 +16,20 @@ load("results/bball_split.rda")
 load("results/bball_train.rda")
 load("results/bball_test.rda")
 load("results/bball_folds.rda")
-load("results/basic_rec.rda")
 
-load("results/null_fit.rda")
+
 load("results/logreg_fit.rda")
 load("results/nb_fit.rda")
-load("results/rf_fit.rda")
 load("results/rf_tune.rda")
+load("results/bt_tune.rda")
+load("results/knn_tune.rda")
+load("results/elastic_tune.rda")
+
+load("results/logreg_fit_off.rda")
+load("results/rf_tune_off.rda")
+load("results/bt_tune_off.rda")
+load("results/knn_tune_off.rda")
+load("results/elastic_tune_off.rda")
 
 # handle common conflicts
 tidymodels_prefer()
@@ -31,6 +38,91 @@ tidymodels_prefer()
 num_cores <- parallel::detectCores(logical=TRUE)
 registerDoParallel(cores=num_cores)
 
+
+## Current ----
+
+## Best models ----
+
+# make workflow set
+model_results <- as_workflow_set(
+  nbayes = nb_fit,
+  logreg = logreg_fit,
+  elastic = elastic_tune,
+  rf = rf_tune,
+  knn = knn_tune, 
+  bt = bt_tune,
+  logreg_off = logreg_fit_off,
+  elastic_off = elastic_tune_off,
+  rf_off = rf_tune_off,
+  knn_off = knn_tune_off, 
+  bt_off = bt_tune_off
+)
+
+# get highest accuracy for each model type
+model_results |> 
+  collect_metrics() |> 
+  filter(.metric == "accuracy") |> 
+  slice_max(mean, by = wflow_id) |> 
+  distinct(wflow_id, .keep_all = TRUE) |>
+  select(`Model Type` = wflow_id,
+         `Accuracy` = mean,
+         `Std Error` = std_err,
+         `Num_Computations` = n) |>
+  kable(digits = c(NA, 3, 4, 0))
+
+
+## Best hyperparams
+
+elastic_best <- elastic_tune |> 
+  select_best(metric = "accuracy")
+
+rf_best <- rf_tune |>
+  select_best(metric = "accuracy")
+
+knn_best <- knn_tune |>
+  select_best(metric = "accuracy")
+
+bt_best <- bt_tune |>
+  select_best(metric = "accuracy")
+
+elastic_off_best <- elastic_tune_off |> 
+  select_best(metric = "accuracy")
+
+rf_off_best <- rf_tune_off |>
+  select_best(metric = "accuracy")
+
+knn_off_best <- knn_tune_off |>
+  select_best(metric = "accuracy")
+
+bt_off_best <- bt_tune_off |>
+  select_best(metric = "accuracy")
+
+
+best_parameters <-
+  bind_rows(
+    bt_best |>  mutate (model = "Boosted Tree"),
+    knn_best |>  mutate (model = "K-nearest Neighbor"),
+    rf_best |>  mutate (model = "Random Forest"),
+    elastic_best |>  mutate(model = "Elastic Net"),
+    bt_off_best |>  mutate (model = "Boosted Tree (Off)"),
+    knn_off_best |>  mutate (model = "K-nearest Neighbor(Off)"),
+    rf_off_best |>  mutate (model = "Random Forest (Off)"),
+    elastic_off_best |>  mutate(model = "Elastic Net (Off)"),
+  ) |>
+  select(model,
+         mtry,
+         min_n,
+         learn_rate,
+         neighbors,
+         penalty,
+         mixture) |> 
+  kable(digits = c(NA, 2, 2, 3, 2, 3, 2))
+
+## OLD ----
+
+# bt 
+select_best(rf_tune, metric = "accuracy") |> 
+  kable(align = "l", caption = "Best Model for Boosted Tree")
 
 # collect accuracy metric
 null_accuracy <- null_fit |> 
@@ -58,8 +150,7 @@ accuracy_table <- bind_rows(
   mutate(null_accuracy, model = "Null Model"),
   mutate(logreg_accuracy, model = "Logistic Regression"),
   mutate(nb_accuracy, model = "Naive Bayes Model"),
-  mutate(rf_accuracy, model = "Random Forest Model"),
-  mutate(rft_accuracy, model = "Tuned RF Model")
+  mutate(rf_accuracy, model = "Random Forest Model")
 ) |> 
   select(model, everything())
 
