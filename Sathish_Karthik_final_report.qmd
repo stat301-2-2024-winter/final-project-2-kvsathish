@@ -106,17 +106,75 @@ Since a variety of predictor variables are utilized to predict whether a NCAA co
 
 ### Data Splitting and Resampling
 
-Before 
+Before splitting the data, it was necessary to manipulate the dataset due to the large imbalance between college players that are drafted and those that are selected. First, created a `pick_dataset` that includes only the players that got drafted ("yes" value in the `pick` column). Then, I created a `non_pick_dataset` that includes only undrafted players, making sure to stratify the new dataset by `year` to fairly collect players from 2009-2021. With the `non_pick_dataset`, I then down sampled it to approximately match the number of observations in the `pick_dataset`. Finally, I utilized the `bind_rows()` function to combine both datasets into one complete dataset for analysis. 
 
-I plan to create a new dataset. First, I will create a `pick_dataset` that includes only the players that got drafted ("yes" value in the `pick` column). Then, I will create a `non_pick_dataset` that includes only undrafted players, and I'll make sure to stratify the new dataset by `year` to fairly collect players from 2009-2021. With the `non_pick_dataset`, I will then down sample it to approximately match the number of observations in the `pick_dataset`. Finally, I will utilize the `bind_rows()` function to combine both datasets into one complete dataset for analysis. Once this new suitable dataset for predictive modelling is created, I will repeat the same fitting or tuning process for each of the chosen models. The only thing to keep in mind is that the Null Model will be useless. It will reflect a value near 0.5 because there are approximately the same number of undrafted and drafted players. The balanced data renders the null model as useless because null models only make predictions off the majority class. This will be kept in mind as I choose a new baseline model prior to thorough analysis. Outside of this major issue, I am not concerned with much else. If more observations are needed, I will also incorporate players from the 2022 dataset. All in all, I feel confident moving forward with the final project.
 
-### Modelling
+Once this new suitable dataset for predictive modelling was created, the data was split so that 80% of the data could be utilized for training the models and 20% of the data could be utilized for testing the models. This split was conducted with stratified sampling by the variable `pick`, meaning there were two strata. 
+
+
+Resampling was necessary to repeatedly estimate the population parameter for thorough analysis. This ensured random samples from the training data were chosen with replacement. Resampling was conducted by utilizing v-fold cross validation with 10 folds and 5 repeats. Also, this resampling process invovled stratifying the `pick` variable. In total, each model was fitted/trained 50 times. 
+
+
+### Modelling and Tuning
+
+In terms of model types, 6 different models were utilized below: 
+
+1) Naive bayes model (`klaR`): This is my baseline model.
+
+2) Logistic regression model (`glm`): This model is used because the dependent variable is binary, and it models the probability of an observation identifying with a certain class.
+
+
+The following model types used some tuned hyperparameters with a regular grid to improve predictive capabilities:
+
+
+3) Elastic net model (`glmnet`): This model uses both Ridge and Lasso to conduct a logistic regression. It selects certain features and accounts for noisy data to make predictions. 
+    - penalty was tuned to prevent overfitting
+    - mixture was tuned to act more like a Ridge or Lasso model for better accuracy
+
+
+4) Boosted tree (`xgboost`): This model utilizes decision trees that account for results of previous trees to make new predictions.
+    - min_n was tuned to control how many data points were split
+    - mtry was tuned to control how many predictors were used
+    - learn_rate was tuned to control the impact of new trees
+
+
+5) K-nearest neighbors model (`kknn`): This model narrows the prediction features and uses Euclidean distance calculations. After that, it identifies the `K` closest points to predict values.
+    - neighbors was tuned to control how many `K` points are utilized for predictions
+
+
+6) Random forest model (`ranger`): This model utilizes decision trees based on random features. All the decision tree results are combined for predictions.
+    - min_n was tuned to control how many data points were split
+    - mtry was tuned to control how many predictors were used
+
+
 
 ### Recipes
 
+A total of 5 recipes were created:
+
+
+For the naive bayes model:
+
+  - Basic Recipe (`nb_rec`): This preprocessing involved a standard kitchen sink recipe that utilized all the variables except those with zero variance, missingness issues, or were unrelated to the target variable. No dummy variables were used.
+
+
+For the logistic regression and elastic net models:
+
+  - Basic Recipe (`basic_rec`): This preprocessing involved a standard kitchen sink recipe that utilized all the variables except those with zero variance, missingness issues, or were unrelated to the target variable. Dummy variables were made out of the nominal variables and the data was appropriately scaled.
+  
+  - Variant Recipe (`off_rec`): This feature engineered recipe was created to evaluate whether a better predictive model could be produced by using solely utilizing offensive output for each basketball player. The thought process behind this recipe was that the NBA is often associated with pure offensive skill. Defense if often overlooked and it is generally thought that offensive talent and output in college translates best to the NBA. In order to test this, the preprocessing involved removing all variables unrelated to offensive output, converting nominal variables to dummy variables, imputing means for missing values for numerical variables, correlating numerical variables that are related, creating an interaction between assist percentage and turnover percentage, appropriately scaling the data, and accounting for variables with zero variance.
+
+
+For the boosted tree, k-nearest neighbor, and random forest models:
+
+  - Basic Recipe (`trees_rec`): This preprocessing involved a standard kitchen sink recipe for trees that utilized all the variables except those with zero variance, missingness issues, or were unrelated to the target variable. Dummy variables were made out of the nominal variables and the data was appropriately scaled.
+
+  - Variant Recipe (`off_trees`): This feature engineered trees recipe was created to evaluate whether a better predictive model could be produced by using solely utilizing offensive output for each basketball player. The thought process behind this recipe was that the NBA is often associated with pure offensive skill. Defense if often overlooked and it is generally thought that offensive talent and output in college translates best to the NBA. In order to test this, the preprocessing involved removing all variables unrelated to offensive output, converting nominal variables to dummy variables, imputing means for missing values for numerical variables, correlating numerical variables that are related, appropriately scaling the data, and accounting for variables with zero variance.
+
+
 ### Evaluation Metric
 
-
+Due to the classification problem at hand, the models will be compared with the accuracy metric. This metric measures the proportion of correct predictions out of total predictions. In order to effectively visualize the best model, a confusion matrix will be constructed.
 
 
 ## Model Building & Selection
