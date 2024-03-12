@@ -92,9 +92,9 @@ For this project, college basketball players and their respective statistics, wi
 Due to the significant imbalance between college basketball players that were drafted compared to undrafted, the analysis is conducted with a much smaller version of the original dataset. The new dataset `draft_data` was utilized to create a new training and testing set that would help facilitate predictive modelling for the challenge at hand. This new dataset also accounts for the missingness above by transforming certain variables like `rec_rank` (Recruiting rank from high school) from a numerical variable to a categorical one.
 
 
-![](images/draft_pic.png)
+![Manipulated Draft Data Graphic](images/draft_pic.png){#fig-draft}
 
-Following the creation of an approxmiately uniform dataset for the variable `pick` that also accounted for missingness, predictive modelling was viable. Plus, each of the observations (unique players) correspond to over 60 different characteristics or statistics for appropriate and thorough analysis. More information about each of the recorded stats can be found in the `bball_players_codebook` text file within the `data` subdirectory.
+Following the creation of an approxmiately uniform dataset for the variable `pick` that also accounted for missingness (shown by @fig-draft), predictive modelling was viable. Plus, each of the observations (unique players) correspond to over 60 different characteristics or statistics for appropriate and thorough analysis. More information about each of the recorded stats can be found in the `bball_players_codebook` text file within the `data` subdirectory.
 
 
 ## Methods
@@ -238,6 +238,9 @@ model_results |>
 
 #### Evaluation of Recipes
 
+According to @tbl-accuracy, the newly feature engineered recipe, based on offensive output for each player, yielded a lower accuracy in terms of predictive modelling for all model types. This is because the accuracy metric reflects a lower value within each model type using the variant recipe compared to basic recipe. Also, three out of five of these models (with the variant recipe) have a lower value of accuracy when compared to the baseline `nbayes` model. Although it was initially thought that strictly offensive statistics would lead to better predictions, it appears that a range of factors (including defensive metrics) contribute towards better predictions for if a college basketball player is drafted. These results contradict that idea that the NBA is just an offensive showcase. Offensive output and talent may contribute towards receiving a selection in the NBA draft, but it is important to not overlook defensive abilities and the overall big picture of every NBA prospect. The entire profile of an NCAA college basketball player provides better overall predictive accuracy for getting drafted than strictly offensive output. Offensive talent in college does not directly translate to receiving a selection to the NBA as previously thought.
+
+
 ### Best Hyperparameters for the Models
 
 ```{r}
@@ -272,14 +275,14 @@ bt_off_best <- bt_tune_off |>
 
 best_hyperparams <-
   bind_rows(
-    bt_best |>  mutate (model = "Boosted Tree"),
-    knn_best |>  mutate (model = "K-nearest Neighbor"),
-    rf_best |>  mutate (model = "Random Forest"),
     elastic_best |>  mutate(model = "Elastic Net"),
-    bt_off_best |>  mutate (model = "Boosted Tree (Off)"),
-    knn_off_best |>  mutate (model = "K-nearest Neighbor(Off)"),
-    rf_off_best |>  mutate (model = "Random Forest (Off)"),
+    rf_best |>  mutate (model = "Random Forest"),
+    knn_best |>  mutate (model = "K-nearest Neighbor"),
+    bt_best |>  mutate (model = "Boosted Tree"),
     elastic_off_best |>  mutate(model = "Elastic Net (Off)"),
+    rf_off_best |>  mutate (model = "Random Forest (Off)"),
+    knn_off_best |>  mutate (model = "K-nearest Neighbor(Off)"),
+    bt_off_best |>  mutate (model = "Boosted Tree (Off)")
   ) |>
   select(model,
          mtry,
