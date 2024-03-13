@@ -1,4 +1,4 @@
-## Train Final Model ----
+## Final assessment of best model with testing data
 
 ## packages and datasets
 library(tidyverse)

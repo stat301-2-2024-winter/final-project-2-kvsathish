@@ -1,4 +1,4 @@
-## Fit for k-nearest neighbor model
+## Tuned k-nearest neighbor models
 
 ## packages and datasets
 library(tidyverse)

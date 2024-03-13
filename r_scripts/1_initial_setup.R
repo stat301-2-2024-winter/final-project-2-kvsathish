@@ -1,4 +1,4 @@
-## R script for progress memo 1
+## Initial setup for project ----
 
 ## packages and datasets
 library(tidyverse)

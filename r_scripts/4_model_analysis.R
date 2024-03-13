@@ -1,4 +1,4 @@
-## Model Analysis
+## Analyzing the accuracy metric for the models
 
 ## packages and datasets
 library(tidyverse)

@@ -1,4 +1,4 @@
-## Fit for logistic model
+## Fits for logistic model
 
 ## packages and datasets
 library(tidyverse)

@@ -1,4 +1,4 @@
-## Tuned boosted trees model
+## Tuned boosted trees models
 
 ## packages and datasets
 library(tidyverse)
