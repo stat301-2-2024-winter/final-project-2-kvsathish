@@ -1,0 +1,32 @@
+Variable: Meaning
+
+player_name: Player name
+team: Team
+conf: Conference
+GP: Games played
+Min_per: Minutes %
+Ortg: Offensive rating
+usg: Usage
+eFG: Effective field goal %
+TS_per: True shooting %
+ORB_per: Offensive rebound %
+DRB_per: Defensive rebound %
+AST_per: Assist %
+TO_per: Turnover %
+FTM: Free throws made
+FTA: Free throws attempted
+FT_per: Free throws %
+twoPM: 2-pointers made
+twoPA: 2-pointers attempted
+twoP_per: 2-pointers %
+TPM: 3-pointers made
+TPA: 3-pointers attempted
+TP_per: 3-pointers %
+PPS: Points per shot
+stl_per: Steal %
+blk_per: Block %
+FIC: Floor impact counter
+PER: Player efficiency rating
+VA: Value added
+EWA: Estimated wins added
+
