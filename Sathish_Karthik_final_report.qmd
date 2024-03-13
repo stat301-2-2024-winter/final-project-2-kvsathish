@@ -94,7 +94,7 @@ For this project, college basketball players and their respective statistics, wi
 Due to the significant imbalance between college basketball players that were drafted compared to undrafted, the analysis is conducted with a much smaller version of the original dataset. The new dataset `draft_data` was utilized to create a new training and testing set that would help facilitate predictive modelling for the challenge at hand. This new dataset also accounts for the missingness above by transforming certain variables like `rec_rank` (Recruiting rank from high school) from a numerical variable to a categorical one.
 
 
-![Manipulated Draft Data Graphic](images/draft_pic.png){#fig-draft}
+![Visualization of `pick` in the New Draft Data](images/draft_pic.png){#fig-draft}
 
 Following the creation of an approxmiately uniform dataset for the variable `pick` that also accounted for missingness (shown by @fig-draft), predictive modelling was viable. Plus, each of the observations (unique players) correspond to over 60 different characteristics or statistics for appropriate and thorough analysis. More information about each of the recorded stats can be found in the `bball_players_codebook` text file within the `data` subdirectory.
 

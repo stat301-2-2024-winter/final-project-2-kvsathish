@@ -39,7 +39,6 @@ num_cores <- parallel::detectCores(logical=TRUE)
 registerDoParallel(cores=num_cores)
 
 
-## Current ----
 
 ## Best models ----
 
@@ -118,6 +117,8 @@ best_parameters <-
          mixture) |> 
   kable(digits = c(NA, 2, 2, 3, 2, 3, 2))
 
+
+
 ## OLD ----
 
 # bt 
@@ -156,8 +157,6 @@ accuracy_table <- bind_rows(
 
 kable(accuracy_table, caption = "Accuracy Metrics")
 
-
-## OLD ----
 
 # Calculate assessment metric for baseline model
 baseline_results <- summary(null_fit)[[accuracy()]]
