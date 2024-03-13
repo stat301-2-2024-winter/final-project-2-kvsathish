@@ -30,3 +30,121 @@ citation-location: margin
 
 :::
 
+```{r}
+#| echo: false
+
+# load packages and datasets
+library(tidyverse)
+library(skimr)
+library(here)
+library(naniar)
+library(knitr)
+library(tidymodels)
+set.seed(6789)
+
+load(here("data/bball_players.rda"))
+load(here("results/bball_train.rda"))
+load(here("results/bball_test.rda"))
+
+# handle common conflicts
+tidymodels_prefer()
+
+
+
+```
+
+## Overview
+
+Following the exploration of multiple model types and various pre-processing avenues, the goal of predicting whether a NCAA college basketball player is drafted into the NBA was addressed. Based on a comprehensive dataset across twelve recent seasons that contains a range of player characteristics and statistics at the collegiate level, the best model, in terms of predictive ability, was identified. The methods, model evaluations, and final model analysis are presented in this report.
+
+## Methods
+
+Motivated to understand what truly influences NBA draft selections, I discovered a dataset that included over 45,000 players and their respective statistics for analysis. Following a robust data cleaning process, an appropriate subset of the data that accounted for missingness was viable for predictive modelling. The main focus was on the target variable `pick` and being able to predict whether the outcome of a player was "drafted" or "undrafted".
+
+In terms of modelling, a variety of models addressing the simple classification problem were utilized. These include Naive Bayes (baseline), Logistic Regression, Elastic Net, Boosted Tree, K-Nearest Neighbors, and Random Forest. Separate preprocessing strategies were used for the Naive Bayes model, the Logistic Regression models (logistic regression and elastic net), and Tree-based models (Boosted Tree, K-Nearest Neighbors, and Random Forest). The first three recipes were created as basic (kitchen-sink) recipes that involved all the variables related to receiving a selection in the NBA draft. Also, two more recipes (one for logistic regression models and one for tree-based models) were tailored to predict draft selection based on purely offensive output. These two variant recipes were inspired by the popular belief that offensive skills translate best from college to the professional level in basketball.
+
+
+## Model Evaluations
+
+After all of the models were appropriately fitted/tuned, the accuracy metric was utilized to compare the models and address the classification problem. A greater value of accuracy reflected a better model.
+
+```{r}
+#| echo: false
+#| label: tbl-accuracy
+#| tbl-cap: Accuracy and Standard Error of Best Performing Models 
+
+load("results/logreg_fit.rda")
+load("results/nb_fit.rda")
+load("results/rf_tune.rda")
+load("results/bt_tune.rda")
+load("results/knn_tune.rda")
+load("results/elastic_tune.rda")
+
+load("results/logreg_fit_off.rda")
+load("results/rf_tune_off.rda")
+load("results/bt_tune_off.rda")
+load("results/knn_tune_off.rda")
+load("results/elastic_tune_off.rda")
+
+
+# make workflow set
+model_results <- as_workflow_set(
+  nbayes = nb_fit,
+  logreg = logreg_fit,
+  elastic = elastic_tune,
+  rf = rf_tune,
+  knn = knn_tune, 
+  bt = bt_tune,
+  logreg_off = logreg_fit_off,
+  elastic_off = elastic_tune_off,
+  rf_off = rf_tune_off,
+  knn_off = knn_tune_off, 
+  bt_off = bt_tune_off
+)
+
+# get highest accuracy for each model type
+model_results |> 
+  collect_metrics() |> 
+  filter(.metric == "accuracy") |> 
+  slice_max(mean, by = wflow_id) |> 
+  distinct(wflow_id, .keep_all = TRUE) |>
+  select(`Model Type` = wflow_id,
+         `Accuracy` = mean,
+         `Std Error` = std_err,
+         `Num_Computations` = n) |>
+  kable(digits = c(NA, 3, 4, 0))
+```
+
+According to @tbl-accuracy, the Elastic Net model with the basic recipe was the most accurate model. This is because it reflected the highest value of accuracy (91.4%). However, it was surprising to find the feature-engineered recipe tailored towards offensive output was less accurate for each of the models. This challenges the popular belief that offensive talent is the best predictor of NBA draft selection. It appears to be more important to evaluate an entire player's profile for predicting whether they would be drafted.
+
+Also, the hyperparameters for the best Elastic Net model were found to be 0.01 for penalty and 0.75 for mixture, which favors the Lasso term. These hyperparameters reflect the significance of the tuning process when constructing predictive models.
+
+
+## Final Model Analysis
+
+For a final measure, the best Elastic Net model was conducted on the testing data (representative of random players not yet analyzed). The final model performed very well with a value of 92.31% for the accuracy metric. The exact performance can be visualized below:
+
+
+![Heatmap of Predictions vs. True Values for Final Model](images/conf_mat_heatmap.png){#fig-heat}
+
+From a confusion matrix that evaluates the effectiveness of a model, @fig-heat reflects a heat map of the predictions against the actual outcomes. There appears to be 277 "yes-yes" values which means that the model was correct at predicting a player receiving a selection into the NBA 277 times. Meanwhile, there was 263 "no-no" values, which reflects the opposite. This means the model was correct at predicting a player going undrafted into the NBA 263 times. Overall, the final model was very effective in predicting NBA draft selection.
+
+
+## Final Reflection
+
+In conclusion, the Elastic Net model using basic preprocessing was the best predictor for whether a NCAA college basketball player will be drafted into the NBA or not. Tuning appropriate hyperparameters was vital for the effectiveness of this model. On the contrary to popular belief, evaluation of the overall picture of a college prospect was a better predictor than focusing on purely offensive output. Future directions may entail utilizing a larger dataset, involving basketball prospects from overseas, and seeing whether there is a connection between performance during March Madness and NBA draft selection.
+
+
+
+## References
+
+The source of my data is a user on `Kaggle.com`, named Aditya Kumar. They are a computer science major at the University of Southern California with roots in Los Angeles, California. The data card is named `College Basketball 2009-2021 + NBA Advanced Stats`^[Found on [https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data](https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data)]. Although all the stats were compiled by Aditya, the raw statistical data should be credited to Bart Torvik^[Found on [https://barttorvik.com/](https://barttorvik.com/)].
+
+### Citations
+
+Kumar, A. (2022). College Basketball 2009-2021 + NBA Advanced Stats. Kaggle.com. [https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data](https://www.kaggle.com/datasets/adityak2003/college-basketball-players-20092021/data)
+
+
+Torvik, B. (2024). Year Customizable T-Rank and Tempo-Free Stats. https://barttorvik.com/. [https://barttorvik.com/playerstat.php?link=y&year=2021&start=20201101&end=20210501](https://barttorvik.com/playerstat.php?link=y&year=2021&start=20201101&end=20210501)
+
+
